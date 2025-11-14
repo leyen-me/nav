@@ -26,7 +26,7 @@ model Navigation {
   title           String
   shortDescription String?  @map("short_description")
   description     String?   @db.Text
-  url             String
+  url             String    @db.Text
   icon            String?
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
@@ -40,7 +40,7 @@ model Navigation {
 model Submission {
   id              String    @id @default(cuid())
   title           String
-  url             String
+  url             String    @db.Text
   description     String?   @db.Text
   status          String    @default("pending") @map("status")
   createdAt       DateTime  @default(now()) @map("created_at")

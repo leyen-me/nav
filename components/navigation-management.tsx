@@ -135,8 +135,8 @@ export function NavigationManagement() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>名称</TableHead>
-              <TableHead>URL</TableHead>
+              <TableHead className="w-48">名称</TableHead>
+              <TableHead className="w-64">URL</TableHead>
               <TableHead>标签</TableHead>
               <TableHead>访问量</TableHead>
               <TableHead>操作</TableHead>
@@ -158,13 +158,16 @@ export function NavigationManagement() {
             ) : (
               navigations.map((nav) => (
                 <TableRow key={nav.id}>
-                  <TableCell className="font-medium">{nav.title}</TableCell>
-                  <TableCell>
+                  <TableCell className="font-medium w-48 max-w-48 truncate" title={nav.title}>
+                    {nav.title}
+                  </TableCell>
+                  <TableCell className="w-64 max-w-64">
                     <a
                       href={nav.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-primary hover:underline"
+                      className="text-primary hover:underline truncate block"
+                      title={nav.url}
                     >
                       {nav.url}
                     </a>

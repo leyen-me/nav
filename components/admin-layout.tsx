@@ -2,9 +2,10 @@
 
 import { signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
-import { LogOut, Bookmark } from "lucide-react"
+import { LogOut } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { ThemeToggle } from "./theme-toggle"
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -39,30 +40,32 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 }`}
               >
-                提交审核
+                审核管理
               </Link>
               <Link
                 href="/admin/bookmarks"
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors flex items-center gap-2 ${
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   pathname === "/admin/bookmarks"
                     ? "text-foreground bg-accent"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 }`}
               >
-                <Bookmark className="h-4 w-4" />
                 书签管理
               </Link>
             </nav>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => signOut({ callbackUrl: "/admin/login" })}
-            className="gap-2"
-          >
-            <LogOut className="h-4 w-4" />
-            退出登录
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => signOut({ callbackUrl: "/admin/login" })}
+              className="gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              退出登录
+            </Button>
+          </div>
         </div>
       </div>
       <div className="container mx-auto px-4 py-8">{children}</div>

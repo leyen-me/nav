@@ -100,13 +100,13 @@ export function SubmissionManagement() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
-        return <Badge variant="outline">待审核</Badge>
+        return <Badge variant="outline" className="px-3 py-1">待审核</Badge>
       case "approved":
-        return <Badge variant="default">已通过</Badge>
+        return <Badge variant="default" className="px-3 py-1">已通过</Badge>
       case "rejected":
-        return <Badge variant="destructive">已拒绝</Badge>
+        return <Badge variant="destructive" className="px-3 py-1">已拒绝</Badge>
       default:
-        return <Badge>{status}</Badge>
+        return <Badge className="px-3 py-1">{status}</Badge>
     }
   }
 
@@ -161,7 +161,9 @@ export function SubmissionManagement() {
                       <TableCell className="max-w-xs truncate">
                         {submission.description || "-"}
                       </TableCell>
-                      <TableCell>{getStatusBadge(submission.status)}</TableCell>
+                      <TableCell className="py-3">
+                        {getStatusBadge(submission.status)}
+                      </TableCell>
                       <TableCell>
                         {new Date(submission.createdAt).toLocaleString("zh-CN")}
                       </TableCell>
