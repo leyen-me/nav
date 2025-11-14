@@ -82,7 +82,7 @@ export function FilterBar() {
           <Badge
             key={tag.id}
             variant={selectedTags.includes(tag.name) ? "default" : "outline"}
-            className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+            className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors text-sm px-3 py-1"
             onClick={() => toggleTag(tag.name)}
           >
             {tag.name}

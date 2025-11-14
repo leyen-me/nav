@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { Github, Plus } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
@@ -35,7 +34,6 @@ export function Header() {
               onClick={() => setSubmitOpen(true)}
               className="text-sm font-medium"
             >
-              <Plus className="mr-2 h-4 w-4" />
               提交网站
             </Button>
             <Link
@@ -44,7 +42,7 @@ export function Header() {
               rel="noopener noreferrer"
               className="text-sm font-medium transition-colors hover:text-primary"
             >
-              <Github className="h-5 w-5" />
+              开源地址
             </Link>
           </nav>
 
@@ -52,18 +50,18 @@ export function Header() {
           <nav className="flex md:hidden items-center gap-2">
             <Button
               variant="ghost"
-              size="icon"
+              size="sm"
               onClick={() => setSubmitOpen(true)}
             >
-              <Plus className="h-5 w-5" />
+              提交
             </Button>
             <Link
               href="https://github.com"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button variant="ghost" size="icon">
-                <Github className="h-5 w-5" />
+              <Button variant="ghost" size="sm">
+                开源
               </Button>
             </Link>
           </nav>

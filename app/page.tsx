@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-pattern">
       <Header />
-      <main className="flex-1 container px-4 py-8 space-y-8">
+      <main className="flex-1 container px-4 py-8 space-y-8 mx-auto max-w-7xl">
         <div className="space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-bold tracking-tight">发现优质网站</h1>

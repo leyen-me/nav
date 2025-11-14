@@ -22,15 +22,29 @@ export function ThemeToggle() {
     )
   }
 
+  const toggleTheme = () => {
+    if (theme === "dark") {
+      setTheme("light")
+    } else if (theme === "light") {
+      setTheme("dark")
+    } else {
+      // 如果是 system，根据系统偏好设置
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+      setTheme(prefersDark ? "light" : "dark")
+    }
+  }
+
+  const isDark = theme === "dark" || (theme === "system" && typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={toggleTheme}
       className="h-9 w-9 relative overflow-hidden group"
     >
-      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <Sun className={`h-4 w-4 transition-all ${isDark ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"}`} />
+      <Moon className={`absolute h-4 w-4 transition-all ${isDark ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-0 opacity-0"}`} />
       <span className="sr-only">切换主题</span>
     </Button>
   )
