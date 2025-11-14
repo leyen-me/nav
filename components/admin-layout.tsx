@@ -59,7 +59,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => signOut({ callbackUrl: "/admin/login" })}
+              onClick={() => signOut({ callbackUrl: "/" })}
               className="gap-2"
             >
               <LogOut className="h-4 w-4" />
