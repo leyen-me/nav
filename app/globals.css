@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+:root {
   --color-background: hsl(0 0% 100%);
   --color-foreground: hsl(0 0% 3.9%);
   --color-card: hsl(0 0% 100%);
@@ -24,7 +24,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  @theme {
+  :root {
     --color-background: hsl(0 0% 3.9%);
     --color-foreground: hsl(0 0% 98%);
     --color-card: hsl(0 0% 3.9%);
@@ -47,7 +47,8 @@
   }
 }
 
-.dark {
+.dark,
+html.dark {
   --color-background: hsl(0 0% 3.9%);
   --color-foreground: hsl(0 0% 98%);
   --color-card: hsl(0 0% 3.9%);
