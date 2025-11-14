@@ -5,8 +5,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Eye, Calendar } from "lucide-react"
 import Image from "next/image"
-import { useEffect } from "react"
-import { gsap } from "gsap"
 
 interface NavigationDetailProps {
   navigation: {
@@ -23,16 +21,8 @@ interface NavigationDetailProps {
 }
 
 export function NavigationDetail({ navigation }: NavigationDetailProps) {
-  useEffect(() => {
-    gsap.from(".detail-content", {
-      y: 20,
-      duration: 0.6,
-      ease: "power2.out",
-    })
-  }, [])
-
   return (
-    <div className="max-w-4xl mx-auto space-y-6 detail-content relative z-10">
+    <div className="max-w-4xl mx-auto space-y-6 detail-content relative z-10 animate-fade-in-up">
       <Card>
         <CardHeader>
           <div className="flex items-start justify-between">

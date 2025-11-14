@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { gsap } from "gsap"
 import { useSearchParams } from "next/navigation"
 
 interface NavigationItem {
@@ -64,35 +63,6 @@ export function NavigationGrid() {
     fetchData()
   }, [searchParams])
 
-  useEffect(() => {
-    if (items.length > 0) {
-      // 清理之前的动画
-      gsap.killTweensOf(".nav-card")
-      
-      // 设置初始状态 - 苹果风格的淡入+轻微缩放+上移
-      gsap.set(".nav-card", { 
-        opacity: 0,
-        scale: 0.96,
-        y: 12
-      })
-      
-      // 执行动画 - 苹果风格的缓动曲线
-      gsap.to(".nav-card", {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        stagger: 0.03,
-        duration: 0.6,
-        ease: "power3.out",
-      })
-    }
-    
-    // 清理函数
-    return () => {
-      gsap.killTweensOf(".nav-card")
-    }
-  }, [items])
-
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -121,10 +91,13 @@ export function NavigationGrid() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {items.map((item) => (
+      {items.map((item, index) => (
         <Card
           key={item.id}
-          className="nav-card group hover:shadow-lg transition-all duration-300 hover:border-primary/50 relative"
+          className="nav-card group hover:shadow-lg transition-all duration-300 hover:border-primary/50 relative animate-card-in"
+          style={{
+            animationDelay: `${index * 30}ms`,
+          }}
         >
           <CardHeader>
             <div className="flex items-start justify-between">
