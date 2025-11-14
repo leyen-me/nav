@@ -29,12 +29,31 @@ export function SubmitDialog({ open, onOpenChange }: SubmitDialogProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    // TODO: 实现提交逻辑
-    setTimeout(() => {
-      setLoading(false)
+    
+    try {
+      const response = await fetch("/api/submissions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "提交失败")
+      }
+
+      // 提交成功
       onOpenChange(false)
       setFormData({ title: "", url: "", description: "" })
-    }, 1000)
+      alert("提交成功！我们会尽快审核您的提交。")
+    } catch (error) {
+      console.error("提交失败:", error)
+      alert(error instanceof Error ? error.message : "提交失败，请稍后重试")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

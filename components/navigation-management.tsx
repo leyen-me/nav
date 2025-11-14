@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Trash2, X } from "lucide-react"
+import { Plus, Pencil, Trash2, X, RefreshCw } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 interface Navigation {
@@ -224,140 +224,182 @@ export function NavigationManagement() {
     })
   }
 
+  const handleUpdateFavicons = async () => {
+    if (!confirm("确定要更新所有缺失的 favicon 吗？这可能需要一些时间。")) return
+
+    try {
+      toast({
+        title: "开始更新",
+        description: "正在更新 favicon，请稍候...",
+      })
+
+      const res = await fetch("/api/cron/update-favicons", {
+        method: "POST",
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        toast({
+          title: "更新完成",
+          description: `成功更新 ${data.updated}/${data.total} 个 favicon`,
+        })
+        fetchNavigations()
+      } else {
+        throw new Error(data.error || "更新失败")
+      }
+    } catch (error) {
+      toast({
+        title: "错误",
+        description: error instanceof Error ? error.message : "更新失败",
+        variant: "destructive",
+      })
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">导航列表</h2>
-        <Dialog
-          open={dialogOpen}
-          onOpenChange={(open) => {
-            setDialogOpen(open)
-            if (!open) resetForm()
-          }}
-        >
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              添加导航
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>
-                {editingId ? "编辑导航" : "添加导航"}
-              </DialogTitle>
-              <DialogDescription>
-                {editingId
-                  ? "修改导航信息"
-                  : "添加一个新的导航网站"}
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">网站名称 *</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="url">网站地址 *</Label>
-                <Input
-                  id="url"
-                  type="url"
-                  value={formData.url}
-                  onChange={(e) =>
-                    setFormData({ ...formData, url: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="shortDescription">简短描述</Label>
-                <Input
-                  id="shortDescription"
-                  value={formData.shortDescription}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      shortDescription: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">详细介绍</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  rows={6}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="icon">图标URL</Label>
-                <Input
-                  id="icon"
-                  type="url"
-                  value={formData.icon}
-                  onChange={(e) =>
-                    setFormData({ ...formData, icon: e.target.value })
-                  }
-                  placeholder="https://example.com/favicon.ico"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tags">标签</Label>
-                <Input
-                  id="tags"
-                  value={formData.tagInput}
-                  onChange={(e) =>
-                    setFormData({ ...formData, tagInput: e.target.value })
-                  }
-                  onKeyDown={handleTagInputKeyDown}
-                  placeholder="输入标签后按回车添加"
-                />
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {formData.selectedTags.map((tagId) => {
-                    const tag = tags.find((t) => t.id === tagId)
-                    return tag ? (
-                      <Badge
-                        key={tagId}
-                        variant="secondary"
-                        className="cursor-pointer"
-                        onClick={() => removeTag(tagId)}
-                      >
-                        {tag.name}
-                        <X className="ml-1 h-3 w-3" />
-                      </Badge>
-                    ) : null
-                  })}
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={handleUpdateFavicons}
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            更新 Favicon
+          </Button>
+          <Dialog
+            open={dialogOpen}
+            onOpenChange={(open) => {
+              setDialogOpen(open)
+              if (!open) resetForm()
+            }}
+          >
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                添加导航
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingId ? "编辑导航" : "添加导航"}
+                </DialogTitle>
+                <DialogDescription>
+                  {editingId
+                    ? "修改导航信息"
+                    : "添加一个新的导航网站"}
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">网站名称 *</Label>
+                  <Input
+                    id="title"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    required
+                  />
                 </div>
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setDialogOpen(false)
-                    resetForm()
-                  }}
-                >
-                  取消
-                </Button>
-                <Button type="submit">
-                  {editingId ? "更新" : "创建"}
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <div className="space-y-2">
+                  <Label htmlFor="url">网站地址 *</Label>
+                  <Input
+                    id="url"
+                    type="url"
+                    value={formData.url}
+                    onChange={(e) =>
+                      setFormData({ ...formData, url: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="shortDescription">简短描述</Label>
+                  <Input
+                    id="shortDescription"
+                    value={formData.shortDescription}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        shortDescription: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">详细介绍</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                    rows={6}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="icon">图标URL</Label>
+                  <Input
+                    id="icon"
+                    type="url"
+                    value={formData.icon}
+                    onChange={(e) =>
+                      setFormData({ ...formData, icon: e.target.value })
+                    }
+                    placeholder="https://example.com/favicon.ico"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="tags">标签</Label>
+                  <Input
+                    id="tags"
+                    value={formData.tagInput}
+                    onChange={(e) =>
+                      setFormData({ ...formData, tagInput: e.target.value })
+                    }
+                    onKeyDown={handleTagInputKeyDown}
+                    placeholder="输入标签后按回车添加"
+                  />
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.selectedTags.map((tagId) => {
+                      const tag = tags.find((t) => t.id === tagId)
+                      return tag ? (
+                        <Badge
+                          key={tagId}
+                          variant="secondary"
+                          className="cursor-pointer"
+                          onClick={() => removeTag(tagId)}
+                        >
+                          {tag.name}
+                          <X className="ml-1 h-3 w-3" />
+                        </Badge>
+                      ) : null
+                    })}
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setDialogOpen(false)
+                      resetForm()
+                    }}
+                  >
+                    取消
+                  </Button>
+                  <Button type="submit">
+                    {editingId ? "更新" : "创建"}
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="border rounded-lg">

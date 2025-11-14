@@ -31,9 +31,24 @@ model Navigation {
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
   visits          Int       @default(0)
+  status          String    @default("approved") @map("status")
   tags            NavigationTag[]
 
   @@map("navigations")
+}
+
+model Submission {
+  id              String    @id @default(cuid())
+  title           String
+  url             String
+  description     String?   @db.Text
+  status          String    @default("pending") @map("status")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  reviewedAt      DateTime? @map("reviewed_at")
+  reviewedBy      String?   @map("reviewed_by")
+
+  @@map("submissions")
 }
 
 model Tag {

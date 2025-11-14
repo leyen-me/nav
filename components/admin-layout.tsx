@@ -29,6 +29,16 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                 导航管理
               </Link>
               <Link
+                href="/admin/submissions"
+                className={`text-sm font-medium transition-colors ${
+                  pathname === "/admin/submissions"
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                提交审核
+              </Link>
+              <Link
                 href="/admin/bookmarks"
                 className={`text-sm font-medium transition-colors ${
                   pathname === "/admin/bookmarks"

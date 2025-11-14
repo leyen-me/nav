@@ -9,7 +9,11 @@ export async function GET(request: NextRequest) {
     const tag = searchParams.get("tag")
     const sortBy = searchParams.get("sortBy")
 
-    let where: any = {}
+    // 构建查询条件
+    let where: any = {
+      status: "approved", // 只返回已审核通过的
+    }
+    
     if (q) {
       where.OR = [
         { title: { contains: q } },
@@ -35,20 +39,59 @@ export async function GET(request: NextRequest) {
       orderBy = { createdAt: "desc" }
     }
 
-    const navigations = await prisma.navigation.findMany({
-      where,
-      orderBy,
-      include: {
-        tags: {
-          include: {
-            tag: true,
+    let navigations
+    try {
+      navigations = await prisma.navigation.findMany({
+        where,
+        orderBy,
+        include: {
+          tags: {
+            include: {
+              tag: true,
+            },
           },
         },
-      },
-    })
+      })
+    } catch (error: any) {
+      // 如果是因为 status 字段不存在（数据库未迁移），尝试不带 status 的查询
+      if (error?.message?.includes("status") || error?.code === "P2009") {
+        console.warn("Status field not found, querying without status filter. Please run database migration.")
+        // 移除 status 条件，重新构建 where
+        const whereWithoutStatus: any = {}
+        if (q) {
+          whereWithoutStatus.OR = [
+            { title: { contains: q } },
+            { shortDescription: { contains: q } },
+            { description: { contains: q } },
+          ]
+        }
+        if (tag) {
+          whereWithoutStatus.tags = {
+            some: {
+              tag: {
+                name: tag,
+              },
+            },
+          }
+        }
+        navigations = await prisma.navigation.findMany({
+          where: whereWithoutStatus,
+          orderBy,
+          include: {
+            tags: {
+              include: {
+                tag: true,
+              },
+            },
+          },
+        })
+      } else {
+        throw error
+      }
+    }
 
     return NextResponse.json(navigations)
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching navigations:", error)
     return NextResponse.json(
       { error: "Failed to fetch navigations" },

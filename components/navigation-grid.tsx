@@ -39,10 +39,23 @@ export function NavigationGrid() {
         if (sortBy) params.set("sortBy", sortBy)
 
         const res = await fetch(`/api/navigations?${params.toString()}`)
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`)
+        }
+        
         const data = await res.json()
-        setItems(data)
+        
+        // 确保 data 是数组
+        if (Array.isArray(data)) {
+          setItems(data)
+        } else {
+          console.error("Invalid data format:", data)
+          setItems([])
+        }
       } catch (error) {
         console.error("Failed to fetch navigations:", error)
+        setItems([])
       } finally {
         setLoading(false)
       }
@@ -56,15 +69,21 @@ export function NavigationGrid() {
       // 清理之前的动画
       gsap.killTweensOf(".nav-card")
       
-      // 设置初始状态
-      gsap.set(".nav-card", { y: 20 })
+      // 设置初始状态 - 苹果风格的淡入+轻微缩放+上移
+      gsap.set(".nav-card", { 
+        opacity: 0,
+        scale: 0.96,
+        y: 12
+      })
       
-      // 执行动画
+      // 执行动画 - 苹果风格的缓动曲线
       gsap.to(".nav-card", {
+        opacity: 1,
+        scale: 1,
         y: 0,
-        stagger: 0.05,
-        duration: 0.5,
-        ease: "power2.out",
+        stagger: 0.03,
+        duration: 0.6,
+        ease: "power3.out",
       })
     }
     
