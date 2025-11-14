@@ -53,13 +53,24 @@ export function NavigationGrid() {
 
   useEffect(() => {
     if (items.length > 0) {
-      gsap.from(".nav-card", {
-        opacity: 0,
-        y: 20,
+      // 清理之前的动画
+      gsap.killTweensOf(".nav-card")
+      
+      // 设置初始状态
+      gsap.set(".nav-card", { y: 20 })
+      
+      // 执行动画
+      gsap.to(".nav-card", {
+        y: 0,
         stagger: 0.05,
         duration: 0.5,
         ease: "power2.out",
       })
+    }
+    
+    // 清理函数
+    return () => {
+      gsap.killTweensOf(".nav-card")
     }
   }, [items])
 
@@ -123,8 +134,12 @@ export function NavigationGrid() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => window.open(item.url, "_blank")}
+                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity relative z-10"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  window.open(item.url, "_blank")
+                }}
               >
                 <ExternalLink className="h-4 w-4" />
               </Button>
@@ -157,8 +172,15 @@ export function NavigationGrid() {
             </div>
             <Link
               href={`/navigation/${item.id}`}
-              className="absolute inset-0"
+              className="absolute inset-0 z-0"
               aria-label={`查看 ${item.title} 详情`}
+              onClick={(e) => {
+                // 如果点击的是外链按钮，不跳转
+                const target = e.target as HTMLElement
+                if (target.closest('button')) {
+                  e.preventDefault()
+                }
+              }}
             />
           </CardContent>
         </Card>

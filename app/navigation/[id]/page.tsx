@@ -42,9 +42,9 @@ export default async function NavigationPage({
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-pattern">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 container px-4 py-8">
+      <main className="flex-1 container px-4 py-8 mx-auto max-w-7xl relative z-10">
         <NavigationDetail navigation={navigation} />
       </main>
       <Footer />

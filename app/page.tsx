@@ -6,7 +6,7 @@ import { FilterBar } from "@/components/filter-bar"
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-pattern">
+    <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 container px-4 py-8 space-y-8 mx-auto max-w-7xl">
         <div className="space-y-6">

@@ -33,7 +33,7 @@ export function NavigationDetail({ navigation }: NavigationDetailProps) {
   }, [])
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 detail-content">
+    <div className="max-w-4xl mx-auto space-y-6 detail-content relative z-10">
       <Card>
         <CardHeader>
           <div className="flex items-start justify-between">
