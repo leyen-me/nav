@@ -441,7 +441,7 @@ export function NavigationManagement() {
                     </a>
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-2">
                       {nav.tags.map(({ tag }) => (
                         <Badge key={tag.id} variant="secondary">
                           {tag.name}
