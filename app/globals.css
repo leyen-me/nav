@@ -22,6 +22,12 @@
   --color-border: hsl(0 0% 89.8%);
   --color-input: hsl(0 0% 89.8%);
   --color-ring: hsl(220 70% 50%);
+  --color-sidebar: hsl(0 0% 98%);
+  --color-sidebar-foreground: hsl(0 0% 3.9%);
+  --color-sidebar-border: hsl(0 0% 89.8%);
+  --color-sidebar-accent: hsl(220 30% 96%);
+  --color-sidebar-accent-foreground: hsl(0 0% 9%);
+  --color-sidebar-ring: hsl(220 70% 50%);
   --radius: 0.5rem;
 }
 
@@ -47,6 +53,12 @@
     --color-border: hsl(0 0% 14.9%);
     --color-input: hsl(0 0% 14.9%);
     --color-ring: hsl(220 70% 60%);
+    --color-sidebar: hsl(0 0% 9%);
+    --color-sidebar-foreground: hsl(0 0% 98%);
+    --color-sidebar-border: hsl(0 0% 14.9%);
+    --color-sidebar-accent: hsl(220 20% 15%);
+    --color-sidebar-accent-foreground: hsl(0 0% 98%);
+    --color-sidebar-ring: hsl(220 70% 60%);
   }
 }
 
@@ -73,6 +85,12 @@ html.dark {
   --color-border: hsl(0 0% 14.9%);
   --color-input: hsl(0 0% 14.9%);
   --color-ring: hsl(220 70% 60%);
+  --color-sidebar: hsl(0 0% 9%);
+  --color-sidebar-foreground: hsl(0 0% 98%);
+  --color-sidebar-border: hsl(0 0% 14.9%);
+  --color-sidebar-accent: hsl(220 20% 15%);
+  --color-sidebar-accent-foreground: hsl(0 0% 98%);
+  --color-sidebar-ring: hsl(220 70% 60%);
 }
 
 * {

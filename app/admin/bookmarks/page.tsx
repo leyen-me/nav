@@ -11,7 +11,13 @@ export default async function BookmarksPage() {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      session={session}
+      breadcrumbs={[
+        { label: "管理后台", href: "/admin" },
+        { label: "书签管理" },
+      ]}
+    >
       <BookmarkManagement />
     </AdminLayout>
   )

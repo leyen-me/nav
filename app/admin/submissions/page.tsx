@@ -11,7 +11,13 @@ export default async function SubmissionsPage() {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      session={session}
+      breadcrumbs={[
+        { label: "管理后台", href: "/admin" },
+        { label: "审核管理" },
+      ]}
+    >
       <SubmissionManagement />
     </AdminLayout>
   )

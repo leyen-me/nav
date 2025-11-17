@@ -37,7 +37,14 @@ export default async function EditNavigationPage({
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      session={session}
+      breadcrumbs={[
+        { label: "管理后台", href: "/admin" },
+        { label: "导航管理", href: "/admin" },
+        { label: "编辑导航" },
+      ]}
+    >
       <NavigationForm navigation={navigation} />
     </AdminLayout>
   )

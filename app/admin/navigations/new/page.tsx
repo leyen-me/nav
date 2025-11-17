@@ -11,7 +11,14 @@ export default async function NewNavigationPage() {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      session={session}
+      breadcrumbs={[
+        { label: "管理后台", href: "/admin" },
+        { label: "导航管理", href: "/admin" },
+        { label: "新建导航" },
+      ]}
+    >
       <NavigationForm />
     </AdminLayout>
   )

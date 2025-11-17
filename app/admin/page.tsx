@@ -11,7 +11,13 @@ export default async function AdminPage() {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      session={session}
+      breadcrumbs={[
+        { label: "管理后台", href: "/admin" },
+        { label: "导航管理" },
+      ]}
+    >
       <NavigationManagement />
     </AdminLayout>
   )
