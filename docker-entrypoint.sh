@@ -22,28 +22,9 @@ fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # 运行数据库迁移（如果需要）
+# 注意：由于 docker-compose.yml 中已配置 depends_on 和健康检查，
+# 数据库服务在应用启动前应该已经就绪，因此直接运行迁移即可
 if [ "$RUN_MIGRATIONS" = "true" ]; then
-  echo ""
-  echo "⏳ 等待数据库就绪..."
-  echo "   正在检查数据库连接..."
-  # 简单的重试逻辑
-  max_attempts=30
-  attempt=0
-  while [ $attempt -lt $max_attempts ]; do
-    if npx prisma migrate status > /dev/null 2>&1 || npx prisma db push --accept-data-loss --skip-generate > /dev/null 2>&1; then
-      echo "✅ 数据库连接成功 (尝试 $attempt/$max_attempts)"
-      break
-    fi
-    attempt=$((attempt + 1))
-    echo "   ⏸️  等待数据库连接... ($attempt/$max_attempts)"
-    sleep 2
-  done
-  
-  if [ $attempt -eq $max_attempts ]; then
-    echo "❌ 错误: 无法连接到数据库，已达到最大重试次数 ($max_attempts)"
-    exit 1
-  fi
-  
   echo ""
   echo "📦 运行数据库迁移..."
   echo "   执行: prisma migrate deploy"
