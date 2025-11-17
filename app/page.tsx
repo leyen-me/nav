@@ -7,6 +7,7 @@ import { FilterBar } from "@/components/filter-bar"
 import { AnimatedBackground } from "@/components/animated-background"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { FixedSearchBar } from "@/components/fixed-search-bar"
+import { SearchBarWrapper } from "@/components/search-bar-wrapper"
 
 export default function Home() {
   return (
@@ -18,7 +19,9 @@ export default function Home() {
         <div className="space-y-6 md:space-y-8">
           <div className="animate-fade-in-up" data-search-bar="original">
             <Suspense fallback={<div className="h-16 md:h-20" />}>
-              <SearchBar />
+              <SearchBarWrapper>
+                <SearchBar />
+              </SearchBarWrapper>
             </Suspense>
           </div>
           <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
