@@ -323,3 +323,33 @@ html.dark [data-slot="toggle-group-item"][data-state="on"] {
   }
 }
 
+/* Sonner Toast 样式修复 - 确保背景色正确显示 */
+[data-sonner-toaster] {
+  --normal-bg: var(--color-popover);
+  --normal-text: var(--color-popover-foreground);
+  --normal-border: var(--color-border);
+}
+
+[data-sonner-toast] {
+  background-color: var(--color-popover) !important;
+  color: var(--color-popover-foreground) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  background-color: var(--color-popover) !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background-color: var(--color-popover) !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  background-color: var(--color-popover) !important;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background-color: var(--color-popover) !important;
+}
+

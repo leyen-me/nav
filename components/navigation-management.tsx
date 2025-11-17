@@ -38,7 +38,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Plus, Pencil, Trash2, RefreshCw, Search } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 
 interface Navigation {
   id: string
@@ -79,7 +79,8 @@ export function NavigationManagement() {
   const [sortBy, setSortBy] = useState<string>("created")
   const [tags, setTags] = useState<Tag[]>([])
   const [updateFaviconDialogOpen, setUpdateFaviconDialogOpen] = useState(false)
-  const { toast } = useToast()
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [navigationToDelete, setNavigationToDelete] = useState<Navigation | null>(null)
 
   useEffect(() => {
     fetchTags()
@@ -128,41 +129,44 @@ export function NavigationManagement() {
         throw new Error(result.error || "获取导航数据失败")
       }
     } catch (error) {
-      toast({
-        title: "错误",
+      toast.error("错误", {
         description: error instanceof Error ? error.message : "获取导航数据失败",
-        variant: "destructive",
       })
     } finally {
       setLoading(false)
     }
-  }, [pagination.page, pagination.pageSize, searchQuery, selectedTag, sortBy, toast])
+  }, [pagination.page, pagination.pageSize, searchQuery, selectedTag, sortBy])
 
   useEffect(() => {
     fetchNavigations()
   }, [fetchNavigations])
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("确定要删除吗？")) return
+  const handleDelete = (nav: Navigation) => {
+    setNavigationToDelete(nav)
+    setDeleteDialogOpen(true)
+  }
+
+  const confirmDelete = async () => {
+    if (!navigationToDelete) return
+
+    setDeleteDialogOpen(false)
 
     try {
-      const res = await fetch(`/api/navigations/${id}`, {
+      const res = await fetch(`/api/navigations/${navigationToDelete.id}`, {
         method: "DELETE",
       })
 
       if (!res.ok) throw new Error("删除失败")
 
-      toast({
-        title: "成功",
+      toast.success("成功", {
         description: "删除成功",
       })
 
+      setNavigationToDelete(null)
       fetchNavigations()
     } catch (error) {
-      toast({
-        title: "错误",
+      toast.error("错误", {
         description: "删除失败",
-        variant: "destructive",
       })
     }
   }
@@ -175,8 +179,7 @@ export function NavigationManagement() {
     setUpdateFaviconDialogOpen(false)
 
     try {
-      toast({
-        title: "开始更新",
+      toast.info("开始更新", {
         description: "正在更新 favicon，请稍候...",
       })
 
@@ -187,8 +190,7 @@ export function NavigationManagement() {
       const data = await res.json()
 
       if (res.ok) {
-        toast({
-          title: "更新完成",
+        toast.success("更新完成", {
           description: `成功更新 ${data.updated}/${data.total} 个 favicon`,
         })
         fetchNavigations()
@@ -196,10 +198,8 @@ export function NavigationManagement() {
         throw new Error(data.error || "更新失败")
       }
     } catch (error) {
-      toast({
-        title: "错误",
+      toast.error("错误", {
         description: error instanceof Error ? error.message : "更新失败",
-        variant: "destructive",
       })
     }
   }
@@ -441,7 +441,7 @@ export function NavigationManagement() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleDelete(nav.id)}
+                        onClick={() => handleDelete(nav)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -485,6 +485,35 @@ export function NavigationManagement() {
             </Button>
             <Button onClick={confirmUpdateFavicons}>
               确认更新
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 删除确认对话框 */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>确认删除</DialogTitle>
+            <DialogDescription>
+              确定要删除导航 "{navigationToDelete?.title}" 吗？此操作无法撤销。
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setDeleteDialogOpen(false)
+                setNavigationToDelete(null)
+              }}
+            >
+              取消
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+            >
+              确认删除
             </Button>
           </DialogFooter>
         </DialogContent>
