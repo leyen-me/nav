@@ -5,8 +5,6 @@ import {
   IconLayoutDashboard,
   IconBookmark,
   IconFileCheck,
-  IconSettings,
-  IconHelp,
   IconHome,
 } from "@tabler/icons-react"
 import { usePathname } from "next/navigation"
@@ -59,19 +57,6 @@ export function AdminSidebar({
       title: "书签管理",
       url: "/admin/bookmarks",
       icon: IconBookmark,
-    },
-  ]
-
-  const secondaryItems = [
-    {
-      title: "设置",
-      url: "/admin/settings",
-      icon: IconSettings,
-    },
-    {
-      title: "帮助",
-      url: "/admin/help",
-      icon: IconHelp,
     },
   ]
 
@@ -133,26 +118,6 @@ export function AdminSidebar({
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild
-                    tooltip={item.title}
-                    isActive={pathname === item.url}
-                  >
-                    <Link href={item.url}>
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup className="mt-auto">
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {secondaryItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild

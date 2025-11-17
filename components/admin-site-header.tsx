@@ -1,11 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { signOut } from "next-auth/react"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { LogOut } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 import {
   Breadcrumb,
@@ -57,15 +54,6 @@ export function AdminSiteHeader({ title = "管理后台", breadcrumbs }: AdminSi
         )}
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => signOut({ callbackUrl: "/" })}
-            className="gap-2"
-          >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">退出登录</span>
-          </Button>
         </div>
       </div>
     </header>
