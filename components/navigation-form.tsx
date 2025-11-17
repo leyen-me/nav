@@ -130,7 +130,9 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
           })
           const newTag = await res.json()
           tag = newTag
-          setTags([...tags, tag])
+          if (tag) {
+            setTags([...tags, tag])
+          }
         } catch (error) {
           toast({
             title: "错误",

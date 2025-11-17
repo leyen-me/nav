@@ -9,7 +9,7 @@ export function SearchBar() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [search, setSearch] = useState(searchParams.get("q") || "")
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
   const isInitialMount = useRef(true)
 
   useEffect(() => {

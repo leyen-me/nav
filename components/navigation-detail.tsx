@@ -17,7 +17,7 @@ interface NavigationDetailProps {
     icon: string | null
     visits: number
     createdAt: Date
-    tags: { tag: { name: string } }[]
+    tags: { tag: { id: string; name: string } }[]
   }
 }
 
