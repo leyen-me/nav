@@ -1,25 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
-
-async function getFaviconUrl(url: string): Promise<string | null> {
-  try {
-    const domain = new URL(url).origin
-    const faviconUrl = `${domain}/favicon.ico`
-
-    // 尝试获取favicon
-    const response = await fetch(faviconUrl, { method: "HEAD" })
-    if (response.ok) {
-      return faviconUrl
-    }
-
-    // 如果失败，尝试使用Google的favicon服务
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
-  } catch (error) {
-    console.error(`Failed to get favicon for ${url}:`, error)
-    return null
-  }
-}
+import { downloadAndSaveFavicon, updateNavigationIcon } from "@/lib/favicon-downloader"
 
 export async function POST(request: NextRequest) {
   const session = await auth()
@@ -32,7 +14,11 @@ export async function POST(request: NextRequest) {
 
     const navigations = await prisma.navigation.findMany({
       where: {
-        OR: [{ icon: null }, { icon: "" }],
+        OR: [
+          { icon: null },
+          { icon: "" },
+          { iconId: null }, // 也更新没有 iconId 的记录
+        ],
       },
       take: 50, // 每次更新50个，避免超时
     })
@@ -42,20 +28,38 @@ export async function POST(request: NextRequest) {
     const results = []
     for (const nav of navigations) {
       try {
-        const faviconUrl = await getFaviconUrl(nav.url)
-        if (faviconUrl) {
-          await prisma.navigation.update({
-            where: { id: nav.id },
-            data: { icon: faviconUrl },
+        console.log(`处理: ${nav.title} (${nav.url})`)
+        
+        // 下载并保存图标
+        const iconResult = await downloadAndSaveFavicon(nav.url)
+        
+        if (iconResult) {
+          // 更新 Navigation 记录
+          await updateNavigationIcon(nav.id, iconResult)
+          results.push({ 
+            id: nav.id, 
+            title: nav.title, 
+            success: true,
+            iconUrl: iconResult.iconUrl,
           })
-          results.push({ id: nav.id, title: nav.title, success: true })
           console.log(`✓ 更新 ${nav.title} 的favicon`)
         } else {
-          results.push({ id: nav.id, title: nav.title, success: false })
+          results.push({ 
+            id: nav.id, 
+            title: nav.title, 
+            success: false,
+            error: "Failed to download icon",
+          })
+          console.log(`✗ 无法获取 ${nav.title} 的favicon`)
         }
       } catch (error) {
         console.error(`✗ 更新 ${nav.title} 的favicon失败:`, error)
-        results.push({ id: nav.id, title: nav.title, success: false, error: String(error) })
+        results.push({ 
+          id: nav.id, 
+          title: nav.title, 
+          success: false, 
+          error: String(error),
+        })
       }
 
       // 添加延迟，避免请求过快
@@ -68,6 +72,7 @@ export async function POST(request: NextRequest) {
       success: true,
       total: navigations.length,
       updated: results.filter((r) => r.success).length,
+      failed: results.filter((r) => !r.success).length,
       results,
     })
   } catch (error) {

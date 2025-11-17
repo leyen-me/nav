@@ -21,6 +21,16 @@ model User {
   @@map("users")
 }
 
+model Icon {
+  id            String       @id @default(cuid())
+  mimeType      String       @map("mime_type")
+  data          Bytes        @db.LongBlob
+  createdAt     DateTime     @default(now()) @map("created_at")
+  navigations   Navigation[]
+  
+  @@map("icons")
+}
+
 model Navigation {
   id              String    @id @default(cuid())
   title           String
@@ -28,6 +38,8 @@ model Navigation {
   description     String?   @db.Text
   url             String    @db.Text
   icon            String?
+  iconId          String?   @map("icon_id")
+  iconRelation    Icon?     @relation(fields: [iconId], references: [id], onDelete: SetNull)
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
   visits          Int       @default(0)
