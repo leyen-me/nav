@@ -73,6 +73,22 @@ export function FixedSearchBar() {
     }
   }, [isVisible, shouldRender])
 
+  // 当固定搜索框显示时，隐藏 header 的 border-b
+  useEffect(() => {
+    const header = document.querySelector('header')
+    if (!header) return
+
+    if (isVisible) {
+      header.classList.add('border-b-0')
+    } else {
+      header.classList.remove('border-b-0')
+    }
+
+    return () => {
+      header.classList.remove('border-b-0')
+    }
+  }, [isVisible])
+
   if (!shouldRender) return null
 
   return (
@@ -83,7 +99,7 @@ export function FixedSearchBar() {
         "shadow-sm"
       )}
       style={{
-        top: "64px",
+        top: "64px", // 恢复正常的 top 位置
         transform: isVisible ? "translateY(0)" : "translateY(-100%)",
         opacity: isVisible ? 1 : 0,
         pointerEvents: isVisible ? "auto" : "none",
