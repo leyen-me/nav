@@ -29,6 +29,14 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Plus, Pencil, Trash2, RefreshCw, Search } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
@@ -69,6 +77,7 @@ export function NavigationManagement() {
   const [selectedTag, setSelectedTag] = useState<string>("all")
   const [sortBy, setSortBy] = useState<string>("created")
   const [tags, setTags] = useState<Tag[]>([])
+  const [updateFaviconDialogOpen, setUpdateFaviconDialogOpen] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -157,8 +166,12 @@ export function NavigationManagement() {
     }
   }
 
-  const handleUpdateFavicons = async () => {
-    if (!confirm("确定要更新所有缺失的 favicon 吗？这可能需要一些时间。")) return
+  const handleUpdateFavicons = () => {
+    setUpdateFaviconDialogOpen(true)
+  }
+
+  const confirmUpdateFavicons = async () => {
+    setUpdateFaviconDialogOpen(false)
 
     try {
       toast({
@@ -307,59 +320,61 @@ export function NavigationManagement() {
         </div>
       </div>
 
-      {/* 筛选条件 */}
-      <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg bg-card">
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="搜索导航名称、描述..."
-              value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="pl-9"
-            />
+      {/* 统一容器：筛选条件和表格 */}
+      <div className="bg-card rounded-lg shadow-sm overflow-hidden">
+        {/* 筛选条件 */}
+        <div className="flex flex-col sm:flex-row gap-4 p-6 bg-card border-b">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="搜索导航名称、描述..."
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Select value={selectedTag} onValueChange={handleTagChange}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="选择标签" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部标签</SelectItem>
+                {tags.map((tag) => (
+                  <SelectItem key={tag.id} value={tag.name}>
+                    {tag.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={sortBy} onValueChange={handleSortChange}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="排序方式" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="created">按创建时间</SelectItem>
+                <SelectItem value="visits">按访问量</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={pagination.pageSize.toString()} onValueChange={handlePageSizeChange}>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10 条/页</SelectItem>
+                <SelectItem value="20">20 条/页</SelectItem>
+                <SelectItem value="50">50 条/页</SelectItem>
+                <SelectItem value="100">100 条/页</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Select value={selectedTag} onValueChange={handleTagChange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="选择标签" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">全部标签</SelectItem>
-              {tags.map((tag) => (
-                <SelectItem key={tag.id} value={tag.name}>
-                  {tag.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={sortBy} onValueChange={handleSortChange}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="排序方式" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="created">按创建时间</SelectItem>
-              <SelectItem value="visits">按访问量</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={pagination.pageSize.toString()} onValueChange={handlePageSizeChange}>
-            <SelectTrigger className="w-[120px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10 条/页</SelectItem>
-              <SelectItem value="20">20 条/页</SelectItem>
-              <SelectItem value="50">50 条/页</SelectItem>
-              <SelectItem value="100">100 条/页</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
 
-      {/* 表格 */}
-      <div className="border rounded-lg">
-        <Table>
+        {/* 表格 */}
+        <div className="bg-card">
+          <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-48">名称</TableHead>
@@ -430,6 +445,7 @@ export function NavigationManagement() {
             )}
           </TableBody>
         </Table>
+        </div>
       </div>
 
       {/* 分页 */}
@@ -443,6 +459,29 @@ export function NavigationManagement() {
           </div>
         </div>
       )}
+
+      {/* 更新 Favicon 确认对话框 */}
+      <Dialog open={updateFaviconDialogOpen} onOpenChange={setUpdateFaviconDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>更新 Favicon</DialogTitle>
+            <DialogDescription>
+              确定要更新所有缺失的 favicon 吗？这可能需要一些时间。
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setUpdateFaviconDialogOpen(false)}
+            >
+              取消
+            </Button>
+            <Button onClick={confirmUpdateFavicons}>
+              确认更新
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
