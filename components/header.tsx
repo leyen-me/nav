@@ -33,7 +33,7 @@ export function Header() {
               onClick={() => setSubmitOpen(true)}
               className="text-sm font-medium transition-all duration-200 ease-out hover:scale-105 hover:bg-accent/50"
             >
-              提交网站
+              提交
             </Button>
             <Link
               href="https://github.com/leyen-me/nav"
@@ -41,7 +41,7 @@ export function Header() {
               rel="noopener noreferrer"
               className="text-sm font-medium transition-all duration-200 ease-out hover:text-primary hover:scale-105 px-2 py-1 rounded-md hover:bg-accent/50"
             >
-              开源地址
+              开源
             </Link>
           </nav>
 
