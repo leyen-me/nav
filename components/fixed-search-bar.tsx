@@ -94,19 +94,22 @@ export function FixedSearchBar() {
   return (
     <div
       className={cn(
-        "fixed left-0 right-0 z-[49] px-4 transition-all duration-300 ease-out",
+        "fixed left-0 right-0 z-[49] transition-all duration-300 ease-out",
         "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
         "shadow-sm"
       )}
       style={{
-        top: "64px", // 恢复正常的 top 位置
+        top: "60px", // 向上延伸 4px，覆盖 header 底部区域
+        paddingTop: "4px", // 顶部 padding 延伸背景
         transform: isVisible ? "translateY(0)" : "translateY(-100%)",
         opacity: isVisible ? 1 : 0,
         pointerEvents: isVisible ? "auto" : "none",
       }}
     >
-      <div className="container max-w-2xl md:max-w-3xl mx-auto py-2.5">
-        <SearchBar isCompact />
+      <div className="px-4">
+        <div className="container max-w-2xl md:max-w-3xl mx-auto py-2.5">
+          <SearchBar isCompact />
+        </div>
       </div>
     </div>
   )
