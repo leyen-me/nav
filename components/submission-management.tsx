@@ -21,6 +21,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useToast } from "@/hooks/use-toast"
 
 interface Submission {
   id: string
@@ -41,6 +42,7 @@ export function SubmissionManagement() {
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false)
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null)
   const [reviewAction, setReviewAction] = useState<"approve" | "reject" | null>(null)
+  const { toast } = useToast()
 
   const fetchSubmissions = async (status?: string) => {
     setLoading(true)
@@ -89,11 +91,19 @@ export function SubmissionManagement() {
         fetchSubmissions(selectedStatus === "all" ? undefined : selectedStatus)
       } else {
         const error = await response.json()
-        alert(error.error || "操作失败")
+        toast({
+          variant: "destructive",
+          title: "操作失败",
+          description: error.error || "操作失败",
+        })
       }
     } catch (error) {
       console.error("审核失败:", error)
-      alert("操作失败，请稍后重试")
+      toast({
+        variant: "destructive",
+        title: "操作失败",
+        description: "操作失败，请稍后重试",
+      })
     }
   }
 

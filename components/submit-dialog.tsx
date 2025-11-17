@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/hooks/use-toast"
 
 interface SubmitDialogProps {
   open: boolean
@@ -25,6 +26,7 @@ export function SubmitDialog({ open, onOpenChange }: SubmitDialogProps) {
     description: "",
   })
   const [loading, setLoading] = useState(false)
+  const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -47,10 +49,17 @@ export function SubmitDialog({ open, onOpenChange }: SubmitDialogProps) {
       // 提交成功
       onOpenChange(false)
       setFormData({ title: "", url: "", description: "" })
-      alert("提交成功！我们会尽快审核您的提交。")
+      toast({
+        title: "提交成功",
+        description: "我们会尽快审核您的提交。",
+      })
     } catch (error) {
       console.error("提交失败:", error)
-      alert(error instanceof Error ? error.message : "提交失败，请稍后重试")
+      toast({
+        variant: "destructive",
+        title: "提交失败",
+        description: error instanceof Error ? error.message : "提交失败，请稍后重试",
+      })
     } finally {
       setLoading(false)
     }
