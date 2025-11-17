@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
     // 如果不是管理员，只返回已审核通过的
     if (!session) {
       where.status = "approved"
+      where.isPublic = true  // 未登录用户只能看到公开的导航
     }
     
     if (q) {
@@ -58,6 +59,10 @@ export async function GET(request: NextRequest) {
       if (error?.message?.includes("status") || error?.code === "P2009") {
         console.warn("Status field not found, querying without status filter. Please run database migration.")
         const whereWithoutStatus: any = {}
+        // 如果不是管理员，只返回公开的
+        if (!session) {
+          whereWithoutStatus.isPublic = true
+        }
         if (q) {
           whereWithoutStatus.OR = [
             { title: { contains: q } },
@@ -109,6 +114,10 @@ export async function GET(request: NextRequest) {
         console.warn("Status field not found, querying without status filter. Please run database migration.")
         // 移除 status 条件，重新构建 where
         const whereWithoutStatus: any = {}
+        // 如果不是管理员，只返回公开的
+        if (!session) {
+          whereWithoutStatus.isPublic = true
+        }
         if (q) {
           whereWithoutStatus.OR = [
             { title: { contains: q } },

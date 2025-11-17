@@ -44,6 +44,7 @@ model Navigation {
   updatedAt       DateTime  @updatedAt @map("updated_at")
   visits          Int       @default(0)
   status          String    @default("approved") @map("status")
+  isPublic        Boolean   @default(true) @map("is_public")
   tags            NavigationTag[]
 
   @@map("navigations")

@@ -3,8 +3,11 @@ import { Footer } from "@/components/footer"
 import { NavigationDetail } from "@/components/navigation-detail"
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
+import { auth } from "@/auth"
 
 async function getNavigation(id: string) {
+  const session = await auth()
+  
   const navigation = await prisma.navigation.findUnique({
     where: { id },
     include: {
@@ -17,6 +20,11 @@ async function getNavigation(id: string) {
   })
 
   if (!navigation) {
+    return null
+  }
+
+  // 如果未登录且导航是私有的，返回null（会触发notFound）
+  if (!session && !navigation.isPublic) {
     return null
   }
 

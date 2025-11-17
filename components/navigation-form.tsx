@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import { RichTextEditor } from "@/components/rich-text-editor"
 import { useToast } from "@/hooks/use-toast"
 import { ArrowLeft, X } from "lucide-react"
@@ -18,6 +19,7 @@ interface Navigation {
   description: string | null
   url: string
   icon: string | null
+  isPublic: boolean
   tags: { tag: { name: string; id: string } }[]
 }
 
@@ -38,6 +40,7 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
     icon: "",
     tagInput: "",
     selectedTags: [] as string[],
+    isPublic: true,
   })
 
   useEffect(() => {
@@ -51,6 +54,7 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
         icon: navigation.icon || "",
         tagInput: "",
         selectedTags: navigation.tags.map((t) => t.tag.id),
+        isPublic: navigation.isPublic ?? true,
       })
     }
   }, [navigation])
@@ -84,6 +88,7 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
           shortDescription: formData.shortDescription || null,
           description: formData.description || null,
           icon: formData.icon || null,
+          isPublic: formData.isPublic,
           tagIds: formData.selectedTags,
         }),
       })
@@ -242,6 +247,22 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
             }
             placeholder="https://example.com/favicon.ico"
           />
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="isPublic"
+            checked={formData.isPublic}
+            onCheckedChange={(checked) =>
+              setFormData({ ...formData, isPublic: checked === true })
+            }
+          />
+          <Label
+            htmlFor="isPublic"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+          >
+            公开显示（未登录用户可见）
+          </Label>
         </div>
 
         <div className="space-y-2">

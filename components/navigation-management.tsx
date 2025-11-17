@@ -49,6 +49,7 @@ interface Navigation {
   icon: string | null
   visits: number
   createdAt: Date
+  isPublic: boolean
   tags: { tag: { name: string; id: string } }[]
 }
 
@@ -381,19 +382,20 @@ export function NavigationManagement() {
               <TableHead className="w-64">URL</TableHead>
               <TableHead>标签</TableHead>
               <TableHead>访问量</TableHead>
+              <TableHead>可见性</TableHead>
               <TableHead>操作</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center">
+                <TableCell colSpan={6} className="text-center">
                   加载中...
                 </TableCell>
               </TableRow>
             ) : navigations.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center">
+                <TableCell colSpan={6} className="text-center">
                   暂无数据
                 </TableCell>
               </TableRow>
@@ -424,6 +426,11 @@ export function NavigationManagement() {
                     </div>
                   </TableCell>
                   <TableCell>{nav.visits}</TableCell>
+                  <TableCell>
+                    <Badge variant={nav.isPublic ? "default" : "secondary"}>
+                      {nav.isPublic ? "公开" : "私有"}
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Link href={`/admin/navigations/${nav.id}/edit`}>
