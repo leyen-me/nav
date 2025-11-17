@@ -51,13 +51,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 # 复制 Prisma 相关文件（standalone 模式可能不包含 Prisma CLI）
-# 确保必要的目录存在（standalone 可能没有这些目录）
-RUN mkdir -p ./node_modules/.prisma ./node_modules/@prisma ./node_modules/prisma ./node_modules/.bin
-# 复制 Prisma 文件
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
 COPY --from=builder /app/prisma ./prisma
 # 复制 package.json（用于数据库迁移）
 COPY --from=builder /app/package.json ./package.json
@@ -66,7 +62,6 @@ COPY --from=builder /app/docker-entrypoint.sh ./docker-entrypoint.sh
 
 # 设置正确的权限
 RUN chmod +x ./docker-entrypoint.sh && \
-    chmod +x ./node_modules/.bin/prisma && \
     chown -R nextjs:nodejs /app
 
 USER nextjs

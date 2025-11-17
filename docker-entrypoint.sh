@@ -28,12 +28,12 @@ if [ "$RUN_MIGRATIONS" = "true" ]; then
   echo ""
   echo "📦 运行数据库迁移..."
   echo "   执行: prisma migrate deploy"
-  # 使用 node_modules/.bin/prisma 确保能找到 Prisma CLI
-  if ./node_modules/.bin/prisma migrate deploy 2>&1; then
+  # 直接使用 node 运行 prisma CLI（避免符号链接问题）
+  if node ./node_modules/prisma/build/index.js migrate deploy 2>&1; then
     echo "✅ 数据库迁移完成 (使用 migrate deploy)"
   else
     echo "   ⚠️  migrate deploy 失败，尝试使用 db push..."
-    ./node_modules/.bin/prisma db push --accept-data-loss --skip-generate
+    node ./node_modules/prisma/build/index.js db push --accept-data-loss --skip-generate
     echo "✅ 数据库迁移完成 (使用 db push)"
   fi
 else
