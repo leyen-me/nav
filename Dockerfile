@@ -30,6 +30,17 @@ ENV NODE_ENV production
 # 生成 Prisma Client
 RUN npx prisma generate
 
+# 数据库迁移（构建时执行）
+# 使用 --build-arg DATABASE_URL=xxx 传递数据库连接
+ARG DATABASE_URL
+RUN if [ -n "$DATABASE_URL" ]; then \
+      echo "📦 执行数据库迁移..." && \
+      npx prisma migrate deploy && \
+      echo "✅ 迁移完成"; \
+    else \
+      echo "⏭️  跳过迁移（未提供 DATABASE_URL）"; \
+    fi
+
 # 构建 Next.js 应用
 RUN npm run build
 
@@ -50,13 +61,9 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-# 复制 Prisma 相关文件（standalone 模式可能不包含 Prisma CLI）
+# 复制 Prisma Client（运行时需要）
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/prisma ./prisma
-# 复制 package.json（用于数据库迁移）
-COPY --from=builder /app/package.json ./package.json
 # 复制启动脚本
 COPY --from=builder /app/docker-entrypoint.sh ./docker-entrypoint.sh
 
@@ -71,6 +78,6 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-# 使用启动脚本（支持数据库迁移）
+# 使用启动脚本
 ENTRYPOINT ["./docker-entrypoint.sh"]
 
