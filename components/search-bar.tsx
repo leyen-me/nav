@@ -59,8 +59,8 @@ export function SearchBar({ isCompact = false, className }: SearchBarProps) {
     <div className={cn("relative max-w-2xl md:max-w-3xl mx-auto", className)}>
       <div className="relative group">
         <Search className={cn(
-          "absolute left-5 top-1/2 transform -translate-y-1/2 text-muted-foreground transition-all duration-300 group-focus-within:text-foreground z-10",
-          isCompact ? "h-4 w-4 md:h-5 md:w-5" : "h-5 w-5 md:h-6 md:w-6"
+          "absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground transition-colors duration-200 group-focus-within:text-primary z-10",
+          isCompact ? "h-4 w-4 md:h-4 md:w-4" : "h-4 w-4 md:h-5 md:w-5"
         )} />
         <Input
           type="search"
@@ -68,11 +68,16 @@ export function SearchBar({ isCompact = false, className }: SearchBarProps) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className={cn(
-            "pl-14 md:pl-16 text-base md:text-lg bg-background/80 backdrop-blur-xl border-2 border-border/50 transition-all duration-300 focus:border-primary/60 focus:bg-background/95 hover:border-primary/40 rounded-2xl",
-            isCompact ? "h-12 md:h-14 pl-12 md:pl-14" : "h-16 md:h-20"
+            "pl-11 md:pl-12 text-base md:text-lg",
+            "bg-background/60 backdrop-blur-md",
+            "border border-border/60",
+            "transition-all duration-200 ease-out",
+            "hover:bg-background/80 hover:border-border",
+            "focus-visible:bg-background/95 focus-visible:border-primary/50 focus-visible:ring-primary/20 focus-visible:ring-2",
+            "rounded-xl shadow-sm",
+            isCompact ? "h-11 md:h-12 pl-10 md:pl-11" : "h-14 md:h-16"
           )}
         />
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none" />
       </div>
     </div>
   )
