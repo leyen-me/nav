@@ -1,8 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // 启用 standalone 输出模式以优化 Docker 镜像大小
-  output: "standalone",
   images: {
     remotePatterns: [
       {

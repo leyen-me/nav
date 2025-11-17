@@ -48,16 +48,10 @@ RUN adduser --system --uid 1001 nextjs
 
 # 复制必要的文件
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-# 复制 Prisma Client（应用运行时需要）
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-# 复制 Prisma schema 和迁移文件
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/prisma ./prisma
-
-# 安装 Prisma CLI（包含所有依赖）
-RUN npm install prisma@6.19.0
 
 # 设置正确的权限
 RUN chown -R nextjs:nodejs /app
@@ -70,5 +64,5 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # 启动时执行数据库迁移，然后启动应用
-CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
 
