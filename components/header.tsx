@@ -2,14 +2,17 @@
 
 import Link from "next/link"
 import { ThemeToggle } from "./theme-toggle"
+import { BackgroundSettings } from "./background-settings"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { SubmitDialog } from "./submit-dialog"
 import { NavLogo } from "./nav-logo"
 import { SearchBar } from "./search-bar"
 import { cn } from "@/lib/utils"
+import { useBackgroundConfig } from "@/hooks/use-background-config"
 
 export function Header() {
+  const { config } = useBackgroundConfig()
   const [submitOpen, setSubmitOpen] = useState(false)
   const [isFixedSearchVisible, setIsFixedSearchVisible] = useState(false)
   const [shouldRenderFixedSearch, setShouldRenderFixedSearch] = useState(false)
@@ -68,9 +71,12 @@ export function Header() {
   return (
     <>
       <header className={cn(
-        "sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
-        "transition-all duration-200",
-        isFixedSearchVisible ? "border-b-0" : "border-b"
+        "sticky top-0 z-50 w-full transition-all duration-200",
+        isFixedSearchVisible ? "border-b-0" : "border-b",
+        // 根据配置决定是否使用模糊效果
+        config.showHeaderBlur
+          ? "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
+          : "bg-card/80 shadow-sm" // 不使用模糊时，使用 card 背景色并添加阴影增加层级感
       )}>
         <div className="container flex h-16 items-center justify-between px-4 mx-auto max-w-7xl">
           {/* Logo */}
@@ -129,8 +135,9 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Theme Toggle */}
-          <div className="flex items-center">
+          {/* Theme Toggle & Background Settings */}
+          <div className="flex items-center gap-2">
+            <BackgroundSettings />
             <ThemeToggle />
           </div>
         </div>

@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react"
 import { SearchBar } from "./search-bar"
 import { cn } from "@/lib/utils"
+import { useBackgroundConfig } from "@/hooks/use-background-config"
 
 export function FixedSearchBar() {
+  const { config } = useBackgroundConfig()
   const [isVisible, setIsVisible] = useState(false)
   const [shouldRender, setShouldRender] = useState(false)
 
@@ -95,8 +97,11 @@ export function FixedSearchBar() {
     <div
       className={cn(
         "fixed left-0 right-0 z-[49] transition-all duration-200 ease-out",
-        "bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60",
-        "border-b border-border/40 shadow-sm"
+        "border-b border-border/40 shadow-sm",
+        // 根据配置决定是否使用模糊效果
+        config.showHeaderBlur
+          ? "bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60"
+          : "bg-card/90" // 不使用模糊时，使用 card 背景色
       )}
       style={{
         top: "64px",
