@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { ThemeToggle } from "./theme-toggle"
-import { BackgroundSettings } from "./background-settings"
+// import { BackgroundSettings } from "./background-settings" // 保留代码，但不在界面显示
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { SubmitDialog } from "./submit-dialog"
@@ -135,9 +135,8 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Theme Toggle & Background Settings */}
-          <div className="flex items-center gap-2">
-            <BackgroundSettings />
+          {/* Theme Toggle */}
+          <div className="flex items-center">
             <ThemeToggle />
           </div>
         </div>
