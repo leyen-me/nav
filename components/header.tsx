@@ -69,7 +69,7 @@ export function Header() {
     <>
       <header className={cn(
         "sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
-        "transition-all duration-300",
+        "transition-all duration-200",
         isFixedSearchVisible ? "border-b-0" : "border-b"
       )}>
         <div className="container flex h-16 items-center justify-between px-4 mx-auto max-w-7xl">
@@ -90,7 +90,7 @@ export function Header() {
               variant="ghost"
               size="sm"
               onClick={() => setSubmitOpen(true)}
-              className="text-sm font-medium transition-all duration-200 ease-out hover:scale-105 hover:bg-accent/50"
+              className="text-sm font-medium transition-all duration-300 ease-out hover:scale-105 hover:bg-accent/50"
             >
               提交
             </Button>
@@ -139,7 +139,7 @@ export function Header() {
         {shouldRenderFixedSearch && (
           <div
             className={cn(
-              "transition-all duration-300 ease-out overflow-hidden",
+              "transition-all duration-200 ease-out overflow-hidden",
               isFixedSearchVisible
                 ? "max-h-20 opacity-100"
                 : "max-h-0 opacity-0"

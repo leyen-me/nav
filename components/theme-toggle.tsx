@@ -43,8 +43,12 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       className="h-10 w-10 relative overflow-hidden group transition-all duration-200 ease-out hover:scale-105 hover:bg-accent/50"
     >
-      <Sun className={`h-5 w-5 transition-all ${isDark ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"}`} />
-      <Moon className={`absolute h-5 w-5 transition-all ${isDark ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-0 opacity-0"}`} />
+      <Sun 
+        className={`h-5 w-5 transition-all duration-200 ease-out ${isDark ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"}`}
+      />
+      <Moon 
+        className={`absolute h-5 w-5 transition-all duration-200 ease-out ${isDark ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-0 opacity-0"}`}
+      />
       <span className="sr-only">切换主题</span>
     </Button>
   )

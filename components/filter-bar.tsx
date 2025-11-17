@@ -78,7 +78,7 @@ export function FilterBar() {
             <Badge
               key={tag.id}
               variant={isSelected ? "default" : "outline"}
-              className={`cursor-pointer transition-all duration-300 text-sm px-4 py-2 font-medium rounded-full ${
+              className={`cursor-pointer transition-all duration-200 text-sm px-4 py-2 font-medium rounded-full ${
                 isSelected
                   ? "bg-primary text-primary-foreground scale-105 border-2 border-primary/50"
                   : "bg-background/60 backdrop-blur-md hover:bg-background/80 hover:text-foreground hover:scale-105 border-2 border-border/50 hover:border-primary/30"
@@ -103,7 +103,7 @@ export function FilterBar() {
                 }
               : undefined
           }
-          className={`cursor-pointer transition-all duration-300 text-sm px-4 py-2 font-medium rounded-full flex items-center gap-1.5 ${
+          className={`cursor-pointer transition-all duration-200 text-sm px-4 py-2 font-medium rounded-full flex items-center gap-1.5 ${
             sortBy === "created"
               ? "scale-105 border-2 border-primary/50"
               : "bg-background/60 backdrop-blur-md hover:bg-background/80 hover:text-foreground hover:scale-105 border-2 border-border/50 hover:border-primary/30"
@@ -124,7 +124,7 @@ export function FilterBar() {
                 }
               : undefined
           }
-          className={`cursor-pointer transition-all duration-300 text-sm px-4 py-2 font-medium rounded-full flex items-center gap-1.5 ${
+          className={`cursor-pointer transition-all duration-200 text-sm px-4 py-2 font-medium rounded-full flex items-center gap-1.5 ${
             sortBy === "visits"
               ? "scale-105 border-2 border-primary/50"
               : "bg-background/60 backdrop-blur-md hover:bg-background/80 hover:text-foreground hover:scale-105 border-2 border-border/50 hover:border-primary/30"

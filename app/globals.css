@@ -97,10 +97,34 @@ html.dark {
   border-color: var(--color-border);
 }
 
+/* 优化滚动性能 */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  /* 只对 body 的背景色和文字颜色添加过渡 */
+  transition: background-color 200ms ease-out,
+              color 200ms ease-out;
+}
+
+/* 只对关键的可交互元素添加颜色过渡 */
+button,
+a,
+input,
+textarea,
+select,
+[role="button"],
+[data-slot="card"],
+[data-slot="button"] {
+  transition: background-color 200ms ease-out,
+              border-color 200ms ease-out,
+              color 200ms ease-out;
 }
 
 /* 背景图案 - 线条 */
@@ -110,12 +134,14 @@ body {
     linear-gradient(to bottom, color-mix(in srgb, var(--color-border) 30%, transparent) 1px, transparent 1px);
   background-size: 20px 20px;
   background-position: 0 0, 0 0;
+  /* 注意：background-image 过渡性能很差，不添加过渡 */
 }
 
 /* 背景图案 - 点 */
 .bg-pattern-dots {
   background-image: radial-gradient(circle, color-mix(in srgb, var(--color-border) 40%, transparent) 1px, transparent 1px);
   background-size: 20px 20px;
+  /* 注意：background-image 过渡性能很差，不添加过渡 */
 }
 
 /* 卡片入场动画 - 苹果风格 */
@@ -191,6 +217,9 @@ html.dark [data-slot="toggle-group-item"][data-state="on"] {
   background-size: 80px 80px;
   background-position: 0 0, 0 0;
   animation: grid-move 30s linear infinite;
+  /* 使用 GPU 加速 */
+  transform: translateZ(0);
+  /* 注意：background-image 过渡性能很差，不添加过渡 */
 }
 
 @keyframes grid-move {
@@ -255,6 +284,9 @@ html.dark [data-slot="toggle-group-item"][data-state="on"] {
   --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-apple-out: cubic-bezier(0.2, 0, 0, 1);
   --ease-apple-in: cubic-bezier(0.4, 0, 1, 1);
+  /* 统一过渡时长 */
+  --transition-duration: 300ms;
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 登录页面渐变背景 */

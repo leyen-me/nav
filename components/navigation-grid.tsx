@@ -97,7 +97,7 @@ export function NavigationGrid() {
       {items.map((item, index) => (
         <Card
           key={item.id}
-          className="nav-card group hover:shadow-lg transition-all duration-300 hover:border-primary/50 relative animate-card-in"
+          className="nav-card group hover:shadow-lg transition-all duration-200 hover:border-primary/50 relative animate-card-in"
           style={{
             animationDelay: `${index * 30}ms`,
           }}
@@ -129,7 +129,7 @@ export function NavigationGrid() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity relative z-10"
+                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-200 relative z-10"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
@@ -148,7 +148,7 @@ export function NavigationGrid() {
           <CardContent>
             <div className="flex flex-wrap gap-2 mb-3">
               {item.tags.slice(0, 3).map(({ tag }) => (
-                <Badge key={tag.id} variant="secondary" className="text-xs">
+                <Badge key={tag.id} variant="secondary" className="text-xs transition-all duration-200">
                   {tag.name}
                 </Badge>
               ))}
