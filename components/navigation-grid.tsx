@@ -43,13 +43,16 @@ export function NavigationGrid() {
           throw new Error(`HTTP error! status: ${res.status}`)
         }
         
-        const data = await res.json()
+        const result = await res.json()
         
-        // 确保 data 是数组
-        if (Array.isArray(data)) {
-          setItems(data)
+        // 处理新的 API 响应格式 { data: [...], pagination: {...} }
+        if (result.data && Array.isArray(result.data)) {
+          setItems(result.data)
+        } else if (Array.isArray(result)) {
+          // 兼容旧格式（向后兼容）
+          setItems(result)
         } else {
-          console.error("Invalid data format:", data)
+          console.error("Invalid data format:", result)
           setItems([])
         }
       } catch (error) {
