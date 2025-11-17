@@ -7,6 +7,7 @@ import {
   IconFileCheck,
   IconSettings,
   IconHelp,
+  IconHome,
 } from "@tabler/icons-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -23,6 +24,13 @@ import {
   SidebarGroupContent,
 } from "@/components/ui/sidebar"
 import { NavUser } from "@/components/nav-user"
+
+// ==================== 配置区域 ====================
+// 控制"回到前台"按钮的位置
+// "top" - 方案一：在侧边栏内容区顶部（更突出）
+// "footer" - 方案二：在侧边栏底部，用户信息上方（不干扰主功能）
+const HOME_BUTTON_POSITION: "top" | "footer" = "footer"
+// ==================================================
 
 export function AdminSidebar({ 
   user,
@@ -67,6 +75,22 @@ export function AdminSidebar({
     },
   ]
 
+  // 回到前台按钮组件
+  const HomeButton = () => (
+    <SidebarMenuItem>
+      <SidebarMenuButton 
+        asChild
+        tooltip="回到前台"
+        className={HOME_BUTTON_POSITION === "top" ? "bg-primary/10 hover:bg-primary/20" : ""}
+      >
+        <Link href="/">
+          <IconHome />
+          <span>回到前台</span>
+        </Link>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  )
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -93,6 +117,18 @@ export function AdminSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
+        {/* 方案一：回到前台按钮在顶部 */}
+        {HOME_BUTTON_POSITION === "top" && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <HomeButton />
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+        
+        {/* 主要管理功能 */}
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -135,7 +171,17 @@ export function AdminSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        {/* 方案二：回到前台按钮在底部，用户信息上方 */}
+        {HOME_BUTTON_POSITION === "footer" && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <HomeButton />
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+        <NavUser user={{ ...user, avatar: user.avatar || "" }} />
       </SidebarFooter>
     </Sidebar>
   )
