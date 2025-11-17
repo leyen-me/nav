@@ -35,17 +35,20 @@ export function ScrollToTop() {
   return (
     <Button
       onClick={scrollToTop}
-      size="icon"
+      variant="outline"
       className={cn(
-        "fixed bottom-6 right-6 z-50 rounded-full shadow-lg transition-all duration-300",
-        "hover:scale-110 active:scale-95",
+        "fixed bottom-6 right-6 z-50 rounded-full transition-all duration-300",
+        "bg-background/80 backdrop-blur-sm border-border/50",
+        "h-12 w-12 p-0",
+        "hover:bg-background hover:scale-105 active:scale-95",
+        "shadow-sm hover:shadow-md",
         isVisible
-          ? "opacity-100 translate-y-0"
+          ? "opacity-60 translate-y-0 hover:opacity-100"
           : "opacity-0 translate-y-4 pointer-events-none"
       )}
       aria-label="滚动到顶部"
     >
-      <ArrowUp className="h-5 w-5" />
+      <ArrowUp className="h-7 w-7" />
     </Button>
   )
 }

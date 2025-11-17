@@ -79,6 +79,9 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
         ? `/api/navigations/${navigation.id}`
         : "/api/navigations"
 
+      // 规范化图标URL
+      const normalizedIcon = formData.icon ? normalizeIconUrl(formData.icon) : null
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
@@ -87,7 +90,7 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
           url: formData.url,
           shortDescription: formData.shortDescription || null,
           description: formData.description || null,
-          icon: formData.icon || null,
+          icon: normalizedIcon,
           isPublic: formData.isPublic,
           tagIds: formData.selectedTags,
         }),
@@ -165,6 +168,67 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
     })
   }
 
+  // 规范化图标URL，自动添加http://或https://前缀
+  const normalizeIconUrl = (url: string): string => {
+    if (!url || !url.trim()) {
+      return ""
+    }
+    
+    const trimmedUrl = url.trim()
+    
+    // 如果已经是完整的URL（包含http://或https://），直接返回
+    if (/^https?:\/\//i.test(trimmedUrl)) {
+      return trimmedUrl
+    }
+    
+    // 如果是以/开头的相对路径，保持原样（可能是同域名的相对路径）
+    if (trimmedUrl.startsWith("/")) {
+      return trimmedUrl
+    }
+    
+    // 如果是以//开头的协议相对URL，添加https:前缀
+    if (trimmedUrl.startsWith("//")) {
+      return `https:${trimmedUrl}`
+    }
+    
+    // 如果是API路径（如 api/icons, api/icons/123），添加/前缀
+    if (/^api\//i.test(trimmedUrl)) {
+      return `/${trimmedUrl}`
+    }
+    
+    // 匹配域名格式：example.com, www.example.com, example.com/path/to/icon.ico
+    // 域名格式：至少包含一个点，点前后都有字符，且TLD至少2个字符
+    const domainPattern = /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(\/.*)?$/
+    if (domainPattern.test(trimmedUrl)) {
+      return `https://${trimmedUrl}`
+    }
+    
+    // 其他情况，如果包含点号，可能是域名，尝试添加https://
+    if (trimmedUrl.includes(".") && !trimmedUrl.includes(" ")) {
+      return `https://${trimmedUrl}`
+    }
+    
+    // 其他情况保持原样（可能是相对路径）
+    return trimmedUrl
+  }
+
+  const handleIconUrlChange = (value: string) => {
+    setFormData({ ...formData, icon: value })
+  }
+
+  const handleIconUrlBlur = () => {
+    if (formData.icon && formData.icon.trim()) {
+      const normalized = normalizeIconUrl(formData.icon)
+      if (normalized !== formData.icon) {
+        setFormData({ ...formData, icon: normalized })
+        toast({
+          title: "提示",
+          description: "已自动添加 https:// 前缀",
+        })
+      }
+    }
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
@@ -240,13 +304,15 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
           <Label htmlFor="icon">图标URL</Label>
           <Input
             id="icon"
-            type="url"
+            type="text"
             value={formData.icon}
-            onChange={(e) =>
-              setFormData({ ...formData, icon: e.target.value })
-            }
-            placeholder="https://example.com/favicon.ico"
+            onChange={(e) => handleIconUrlChange(e.target.value)}
+            onBlur={handleIconUrlBlur}
+            placeholder="example.com/favicon.ico 或 https://example.com/favicon.ico"
           />
+          <p className="text-sm text-muted-foreground">
+            支持完整URL、域名或相对路径。域名会自动添加 https:// 前缀，API路径（如 api/icons）会自动添加 / 前缀
+          </p>
         </div>
 
         <div className="flex items-center space-x-2">
