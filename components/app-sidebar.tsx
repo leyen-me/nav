@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
 import {
   IconCamera,
   IconChartBar,
@@ -151,6 +153,24 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname()
+
+  // 根据当前路径判断菜单项的选中状态
+  const navMainWithActive = data.navMain.map((item) => ({
+    ...item,
+    isActive: pathname === item.url || (item.url !== "#" && pathname.startsWith(item.url)),
+  }))
+
+  const navSecondaryWithActive = data.navSecondary.map((item) => ({
+    ...item,
+    isActive: pathname === item.url || (item.url !== "#" && pathname.startsWith(item.url)),
+  }))
+
+  const documentsWithActive = data.documents.map((item) => ({
+    ...item,
+    isActive: pathname === item.url || (item.url !== "#" && pathname.startsWith(item.url)),
+  }))
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -158,20 +178,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
+              <Link href="/">
+                <IconInnerShadowTop className="size-5!" />
                 <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navMainWithActive} />
+        <NavDocuments items={documentsWithActive} />
+        <NavSecondary items={navSecondaryWithActive} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
