@@ -73,36 +73,19 @@ export function NavigationDataTable({
           <div className="grid gap-3">
             {currentNavigations.map((navigation, index) => {
               const rank = startIndex + index + 1
-              // 根据排名使用彩虹色系，越靠前颜色越鲜艳
+              // 只有前3名使用彩虹渐变，其他使用普通样式
               const getRankColor = () => {
-                const rainbowColors = [
-                  { color: "text-red-600", size: "text-5xl", weight: "font-black" },      // 第1名：红色
-                  { color: "text-orange-500", size: "text-4xl", weight: "font-black" },  // 第2名：橙色
-                  { color: "text-yellow-500", size: "text-4xl", weight: "font-bold" },  // 第3名：黄色
-                  { color: "text-green-500", size: "text-3xl", weight: "font-bold" },    // 第4名：绿色
-                  { color: "text-blue-500", size: "text-3xl", weight: "font-bold" },     // 第5名：蓝色
-                  { color: "text-indigo-500", size: "text-2xl", weight: "font-semibold" }, // 第6名：靛色
-                  { color: "text-purple-500", size: "text-2xl", weight: "font-semibold" }, // 第7名：紫色
-                ]
-                
-                // 前7名使用彩虹色
-                if (rank <= 7) {
-                  const style = rainbowColors[rank - 1]
-                  return `${style.color} ${style.size} ${style.weight}`
+                if (rank === 1) {
+                  return "bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent text-3xl sm:text-4xl md:text-5xl font-black"
                 }
-                
-                // 8-10名使用渐变色（较浅的彩虹色）
-                if (rank === 8) return "text-red-400 text-xl font-semibold"
-                if (rank === 9) return "text-orange-400 text-xl font-semibold"
-                if (rank === 10) return "text-yellow-400 text-xl font-semibold"
-                
-                // 10名以后循环使用彩虹色，但更浅
-                const cycleIndex = (rank - 11) % 7
-                const lightColors = [
-                  "text-red-300", "text-orange-300", "text-yellow-300",
-                  "text-green-300", "text-blue-300", "text-indigo-300", "text-purple-300"
-                ]
-                return `${lightColors[cycleIndex]} text-lg font-semibold`
+                if (rank === 2) {
+                  return "bg-gradient-to-r from-orange-500 to-yellow-500 bg-clip-text text-transparent text-2xl sm:text-3xl md:text-4xl font-black"
+                }
+                if (rank === 3) {
+                  return "bg-gradient-to-r from-yellow-500 to-green-500 bg-clip-text text-transparent text-2xl sm:text-3xl md:text-4xl font-bold"
+                }
+                // 其他排名使用普通样式
+                return "text-muted-foreground text-base sm:text-lg font-semibold"
               }
 
               return (
@@ -111,23 +94,23 @@ export function NavigationDataTable({
                   className="group relative rounded-lg border bg-card p-4 transition-all hover:border-primary/50 hover:shadow-sm"
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-4 flex-1">
+                    <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
                       <div
-                        className={`flex-shrink-0 w-20 flex items-center justify-center ${getRankColor()}`}
+                        className={`flex-shrink-0 w-12 sm:w-16 md:w-20 flex items-center justify-center ${getRankColor()}`}
                       >
                         {rank}
                       </div>
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 space-y-2 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                           <Link
                             href={`/navigation/${navigation.id}`}
-                            className="font-semibold leading-tight group-hover:text-primary transition-colors hover:underline"
+                            className="font-semibold leading-tight group-hover:text-primary transition-colors hover:underline break-words"
                           >
                             {navigation.title}
                           </Link>
                           <div className="flex items-center gap-1.5 text-sm text-muted-foreground shrink-0">
                             <IconTrendingUp className="h-4 w-4" />
-                            <span className="font-medium tabular-nums">
+                            <span className="font-medium tabular-nums whitespace-nowrap">
                               {navigation.visits.toLocaleString()}
                             </span>
                           </div>
