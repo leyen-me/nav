@@ -41,7 +41,7 @@ export default async function EditNavigationPage({
       session={session}
       breadcrumbs={[
         { label: "管理后台", href: "/admin" },
-        { label: "导航管理", href: "/admin" },
+        { label: "导航管理", href: "/admin/navigations" },
         { label: "编辑导航" },
       ]}
     >

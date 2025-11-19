@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { useTheme } from "next-themes"
 import { IconTrendingUp } from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -26,15 +25,6 @@ interface SectionCardsProps {
 }
 
 export function SectionCards({ stats }: SectionCardsProps) {
-  const { theme, resolvedTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const isDark = mounted && (resolvedTheme === "dark" || theme === "dark")
-
   const formatNumber = (num: number) => {
     if (num >= 1000000) {
       return (num / 1000000).toFixed(1) + "M"
@@ -47,36 +37,18 @@ export function SectionCards({ stats }: SectionCardsProps) {
 
   return (
     <div className="grid grid-cols-1 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      <Card
-        className={`@container/card ${
-          isDark
-            ? "!bg-gray-100 !text-gray-900"
-            : "!bg-primary !text-primary-foreground"
-        }`}
-      >
+      <Card className="@container/card !bg-primary !text-primary-foreground">
         <CardHeader>
-          <CardDescription
-            className={
-              isDark ? "!text-gray-700" : "!text-primary-foreground/70"
-            }
-          >
+          <CardDescription className="!text-primary-foreground/70">
             总导航数量
           </CardDescription>
-          <CardTitle
-            className={`text-2xl font-semibold tabular-nums @[250px]/card:text-3xl ${
-              isDark ? "!text-gray-900" : "!text-primary-foreground"
-            }`}
-          >
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl !text-primary-foreground">
             {stats.totalNavigations.toLocaleString()}
           </CardTitle>
           <CardAction>
             <Badge
               variant="secondary"
-              className={
-                isDark
-                  ? "!bg-gray-200 !text-gray-900 !border-gray-300"
-                  : "!bg-primary-foreground/20 !text-primary-foreground !border-primary-foreground/30"
-              }
+              className="!bg-primary-foreground/20 !text-primary-foreground !border-primary-foreground/30"
             >
               <IconTrendingUp />
               已审核通过
@@ -84,14 +56,10 @@ export function SectionCards({ stats }: SectionCardsProps) {
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div
-            className={`line-clamp-1 flex gap-2 font-medium ${
-              isDark ? "!text-gray-900" : "!text-primary-foreground"
-            }`}
-          >
+          <div className="line-clamp-1 flex gap-2 font-medium !text-primary-foreground">
             所有已审核的导航链接 <IconTrendingUp className="size-4" />
           </div>
-          <div className={isDark ? "!text-gray-700" : "!text-primary-foreground/70"}>
+          <div className="!text-primary-foreground/70">
             当前系统中的导航总数
           </div>
         </CardFooter>

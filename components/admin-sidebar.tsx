@@ -51,7 +51,7 @@ export function AdminSidebar({
     },
     {
       title: "导航管理",
-      url: "/admin",
+      url: "/admin/navigations",
       icon: IconList,
     },
     {
@@ -130,7 +130,7 @@ export function AdminSidebar({
                     tooltip={item.title}
                     isActive={
                       pathname === item.url || 
-                      (item.url === "/admin" && pathname.startsWith("/admin/navigations"))
+                      (item.url === "/admin/navigations" && pathname.startsWith("/admin/navigations"))
                     }
                   >
                     <Link href={item.url}>

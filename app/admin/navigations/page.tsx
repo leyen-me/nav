@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation"
 import { auth } from "@/auth"
 import { AdminLayout } from "@/components/admin-layout"
-import { NavigationForm } from "@/components/navigation-form"
+import { NavigationManagement } from "@/components/navigation-management"
 
-export default async function NewNavigationPage() {
+export default async function NavigationsPage() {
   const session = await auth()
 
   if (!session) {
@@ -15,11 +15,10 @@ export default async function NewNavigationPage() {
       session={session}
       breadcrumbs={[
         { label: "管理后台", href: "/admin" },
-        { label: "导航管理", href: "/admin/navigations" },
-        { label: "新建导航" },
+        { label: "导航管理" },
       ]}
     >
-      <NavigationForm />
+      <NavigationManagement />
     </AdminLayout>
   )
 }

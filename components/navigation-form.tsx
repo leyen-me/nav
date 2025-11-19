@@ -232,7 +232,7 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin">
+        <Link href="/admin/navigations">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -361,7 +361,7 @@ export function NavigationForm({ navigation }: NavigationFormProps) {
         </div>
 
         <div className="flex justify-end gap-4 pt-4 border-t">
-          <Link href="/admin">
+          <Link href="/admin/navigations">
             <Button type="button" variant="outline">
               取消
             </Button>

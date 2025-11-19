@@ -44,13 +44,23 @@ interface ChartAreaInteractiveProps {
 const chartConfig = {
   visits: {
     label: "访问量",
-    color: "var(--primary)",
+    theme: {
+      light: "hsl(220 70% 50%)",
+      dark: "hsl(220 70% 70%)",
+    },
   },
 } satisfies ChartConfig
 
 export function ChartAreaInteractive({ visitTrend }: ChartAreaInteractiveProps) {
   const isMobile = useIsMobile()
-  const [timeRange, setTimeRange] = React.useState("90d")
+  // 使用 useState 的初始化函数，确保服务器端和客户端初始值一致
+  const [timeRange, setTimeRange] = React.useState(() => {
+    // 服务器端总是返回 "90d"，客户端会在 useEffect 中根据 isMobile 调整
+    if (typeof window === "undefined") {
+      return "90d"
+    }
+    return window.innerWidth < 768 ? "7d" : "90d"
+  })
 
   React.useEffect(() => {
     if (isMobile) {
