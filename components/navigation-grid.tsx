@@ -112,7 +112,7 @@ export function NavigationGrid() {
                     width={32}
                     height={32}
                     className="rounded"
-                    unoptimized={item.icon?.startsWith('http')}
+                    unoptimized={item.icon?.startsWith('http') || item.icon?.startsWith('/api/icons/')}
                   />
                 ) : (
                   <div className="w-8 h-8 bg-muted rounded flex items-center justify-center">

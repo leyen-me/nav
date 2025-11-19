@@ -35,7 +35,7 @@ export function NavigationDetail({ navigation }: NavigationDetailProps) {
                   width={64}
                   height={64}
                   className="rounded"
-                  unoptimized={navigation.icon?.startsWith('http')}
+                  unoptimized={navigation.icon?.startsWith('http') || navigation.icon?.startsWith('/api/icons/')}
                 />
               ) : (
                 <div className="w-16 h-16 bg-muted rounded flex items-center justify-center">
