@@ -302,168 +302,197 @@ export function NavigationManagement() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">导航列表</h2>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={handleUpdateFavicons}
-          >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            更新 Favicon
-          </Button>
+      {/* 工具栏 */}
+      <div className="flex flex-col lg:flex-row gap-2">
+        {/* 搜索框 */}
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="搜索导航名称、描述或 URL..."
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        
+        {/* 筛选和操作 */}
+        <div className="flex flex-wrap gap-2">
+          <Select value={selectedTag} onValueChange={handleTagChange}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="全部标签" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全部标签</SelectItem>
+              {tags.map((tag) => (
+                <SelectItem key={tag.id} value={tag.name}>
+                  {tag.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Select value={sortBy} onValueChange={handleSortChange}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="排序" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="created">按创建时间</SelectItem>
+              <SelectItem value="visits">按访问量</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Select value={pagination.pageSize.toString()} onValueChange={handlePageSizeChange}>
+            <SelectTrigger className="w-[110px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10 条/页</SelectItem>
+              <SelectItem value="20">20 条/页</SelectItem>
+              <SelectItem value="50">50 条/页</SelectItem>
+              <SelectItem value="100">100 条/页</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="hidden lg:block w-px bg-border mx-1" />
+          
           <Link href="/admin/navigations/new">
             <Button>
               <Plus className="mr-2 h-4 w-4" />
               添加导航
             </Button>
           </Link>
+          <Button
+            variant="outline"
+            onClick={handleUpdateFavicons}
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            更新网站图标
+          </Button>
         </div>
       </div>
 
-      {/* 统一容器：筛选条件和表格 */}
-      <div className="bg-card rounded-lg shadow-sm overflow-hidden">
-        {/* 筛选条件 */}
-        <div className="flex flex-col sm:flex-row gap-4 p-6 bg-card border-b">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="搜索导航名称、描述..."
-                value={searchQuery}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Select value={selectedTag} onValueChange={handleTagChange}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="选择标签" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">全部标签</SelectItem>
-                {tags.map((tag) => (
-                  <SelectItem key={tag.id} value={tag.name}>
-                    {tag.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={sortBy} onValueChange={handleSortChange}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="排序方式" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="created">按创建时间</SelectItem>
-                <SelectItem value="visits">按访问量</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={pagination.pageSize.toString()} onValueChange={handlePageSizeChange}>
-              <SelectTrigger className="w-[120px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10 条/页</SelectItem>
-                <SelectItem value="20">20 条/页</SelectItem>
-                <SelectItem value="50">50 条/页</SelectItem>
-                <SelectItem value="100">100 条/页</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* 表格 */}
-        <div className="bg-card">
+      {/* 表格容器 */}
+      <div className="border rounded-lg overflow-hidden bg-card">
+        <div className="overflow-x-auto">
           <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-48">名称</TableHead>
-              <TableHead className="w-64">URL</TableHead>
-              <TableHead>标签</TableHead>
-              <TableHead>访问量</TableHead>
-              <TableHead>可见性</TableHead>
-              <TableHead>操作</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center">
-                  加载中...
-                </TableCell>
+            <TableHeader>
+              <TableRow className="bg-muted/50 hover:bg-muted/50">
+                <TableHead className="font-semibold">名称</TableHead>
+                <TableHead className="font-semibold">URL</TableHead>
+                <TableHead className="font-semibold">标签</TableHead>
+                <TableHead className="font-semibold text-center">访问量</TableHead>
+                <TableHead className="font-semibold text-center">可见性</TableHead>
+                <TableHead className="font-semibold text-center">操作</TableHead>
               </TableRow>
-            ) : navigations.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center">
-                  暂无数据
-                </TableCell>
-              </TableRow>
-            ) : (
-              navigations.map((nav) => (
-                <TableRow key={nav.id}>
-                  <TableCell className="font-medium w-48 max-w-48 truncate" title={nav.title}>
-                    {nav.title}
-                  </TableCell>
-                  <TableCell className="w-64 max-w-64">
-                    <a
-                      href={nav.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline truncate block"
-                      title={nav.url}
-                    >
-                      {nav.url}
-                    </a>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-2">
-                      {nav.tags.map(({ tag }) => (
-                        <Badge key={tag.id} variant="secondary">
-                          {tag.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell>{nav.visits}</TableCell>
-                  <TableCell>
-                    <Badge variant={nav.isPublic ? "default" : "secondary"}>
-                      {nav.isPublic ? "公开" : "私有"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Link href={`/admin/navigations/${nav.id}/edit`}>
-                        <Button variant="ghost" size="icon">
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(nav)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-12">
+                    <div className="flex flex-col items-center gap-2">
+                      <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">加载中...</span>
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : navigations.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-12">
+                    <div className="flex flex-col items-center gap-2">
+                      <Search className="h-12 w-12 text-muted-foreground/50" />
+                      <p className="text-muted-foreground font-medium">暂无数据</p>
+                      <p className="text-sm text-muted-foreground/70">
+                        {searchQuery || selectedTag !== "all" 
+                          ? "尝试调整筛选条件" 
+                          : "点击上方按钮添加导航"}
+                      </p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                navigations.map((nav) => (
+                  <TableRow key={nav.id} className="hover:bg-muted/30 transition-colors">
+                    <TableCell className="font-medium max-w-[200px]">
+                      <div className="flex items-center gap-2">
+                        {nav.icon && (
+                          <img src={nav.icon} alt="" className="w-5 h-5 rounded" />
+                        )}
+                        <span className="truncate" title={nav.title}>{nav.title}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="max-w-[250px]">
+                      <a
+                        href={nav.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline truncate block transition-colors"
+                        title={nav.url}
+                      >
+                        {nav.url}
+                      </a>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1.5">
+                        {nav.tags.length > 0 ? (
+                          nav.tags.map(({ tag }) => (
+                            <Badge key={tag.id} variant="secondary" className="text-xs">
+                              {tag.name}
+                            </Badge>
+                          ))
+                        ) : (
+                          <span className="text-xs text-muted-foreground">无标签</span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <span className="font-medium tabular-nums">{nav.visits.toLocaleString()}</span>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge 
+                        variant={nav.isPublic ? "default" : "secondary"}
+                        className="min-w-[60px] justify-center"
+                      >
+                        {nav.isPublic ? "公开" : "私有"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-center gap-1">
+                        <Link href={`/admin/navigations/${nav.id}/edit`}>
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
+                            title="编辑"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(nav)}
+                          className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
+                          title="删除"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
         </div>
       </div>
 
       {/* 分页 */}
       {pagination.totalPages > 0 && (
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           <div className="text-sm text-muted-foreground">
-            共 {pagination.total} 条记录，第 {pagination.page} / {pagination.totalPages} 页
+            共 {pagination.total.toLocaleString()} 条，第 {pagination.page} / {pagination.totalPages} 页
           </div>
-          <div className="ml-auto">
-            {renderPagination()}
-          </div>
+          {renderPagination()}
         </div>
       )}
 
