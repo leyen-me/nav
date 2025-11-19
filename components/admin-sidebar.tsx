@@ -6,6 +6,7 @@ import {
   IconBookmark,
   IconFileCheck,
   IconHome,
+  IconList,
 } from "@tabler/icons-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
@@ -44,9 +45,14 @@ export function AdminSidebar({
   
   const navItems = [
     {
+      title: "数据看板",
+      url: "/admin/dashboard",
+      icon: IconLayoutDashboard,
+    },
+    {
       title: "导航管理",
       url: "/admin",
-      icon: IconLayoutDashboard,
+      icon: IconList,
     },
     {
       title: "审核管理",
@@ -122,7 +128,10 @@ export function AdminSidebar({
                   <SidebarMenuButton 
                     asChild
                     tooltip={item.title}
-                    isActive={pathname === item.url}
+                    isActive={
+                      pathname === item.url || 
+                      (item.url === "/admin" && pathname.startsWith("/admin/navigations"))
+                    }
                   >
                     <Link href={item.url}>
                       {item.icon && <item.icon />}
