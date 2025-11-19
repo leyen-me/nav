@@ -10,7 +10,6 @@
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
-    "init-admin": "tsx scripts/init-admin.ts",
     "init-data": "tsx scripts/init-data.ts",
     "update-favicons": "tsx scripts/update-favicons.ts"
   },

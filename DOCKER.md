@@ -63,14 +63,15 @@ npx prisma db push
 # 生成 Prisma Client（如果需要）
 npx prisma generate
 
-# 初始化管理员账户（如果需要）
-npm run init-admin
-
 # 初始化数据（如果需要）
 npm run init-data
 ```
 
-### 4. 访问应用
+### 4. 创建管理员账户
+
+访问 `http://localhost:3000/admin`（或你配置的端口），系统会自动检测数据库中是否有用户。如果没有用户，会自动跳转到注册页面，您可以创建第一个管理员账户。
+
+### 5. 访问应用
 
 应用将在 `http://localhost:3000` 上运行（或你配置的端口）。
 

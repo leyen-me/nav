@@ -37,11 +37,11 @@
 # 2. 启动服务
 docker-compose up -d
 
-# 3. 初始化管理员（如果需要）
-docker-compose exec app npm run init-admin
+# 3. 访问管理后台进行首次注册
+# 系统会自动检测是否已有用户，如果没有用户会跳转到注册页面
 ```
 
-访问 [http://localhost:3000](http://localhost:3000)
+访问 [http://localhost:3000](http://localhost:3000)，首次访问管理后台时会自动跳转到注册页面创建管理员账户。
 
 ### 方式二：本地开发
 
@@ -70,12 +70,13 @@ npm run db:generate
 
 # 推送数据库架构
 npm run db:push
-
-# 初始化管理员账号（默认: admin@example.com / admin123）
-npm run init-admin
 ```
 
-#### 4. 启动开发服务器
+#### 4. 创建管理员账户
+
+启动应用后，访问 `/admin` 路由，系统会自动检测数据库中是否有用户。如果没有用户，会自动跳转到注册页面，您可以创建第一个管理员账户。
+
+#### 5. 启动开发服务器
 
 ```bash
 npm run dev
@@ -166,7 +167,6 @@ npm run db:generate       # 生成 Prisma 客户端
 npm run db:studio         # 打开 Prisma Studio
 
 # 工具脚本
-npm run init-admin        # 初始化管理员账号
 npm run update-favicons   # 更新 favicon
 ```
 
@@ -218,7 +218,7 @@ docker-compose up -d
 docker-compose logs -f app
 ```
 
-3. **初始化数据库和管理员**
+3. **初始化数据库**
 
 如果 `RUN_MIGRATIONS=false`，需要手动运行：
 
@@ -227,12 +227,13 @@ docker-compose logs -f app
 docker-compose exec app npx prisma migrate deploy
 # 或使用 db push（开发环境）
 docker-compose exec app npx prisma db push
-
-# 初始化管理员账号
-docker-compose exec app npm run init-admin
 ```
 
-4. **访问应用**
+4. **创建管理员账户**
+
+访问 `http://localhost:3000/admin`，系统会自动检测数据库中是否有用户。如果没有用户，会自动跳转到注册页面，您可以创建第一个管理员账户。
+
+5. **访问应用**
 
 应用将在 `http://localhost:3000` 上运行。
 
@@ -265,9 +266,9 @@ docker-compose exec db mysql -u navuser -p nav
 1. 确保数据库已配置并运行
 2. 设置环境变量
 3. 运行数据库迁移: `npm run db:push`
-4. 初始化管理员: `npm run init-admin`
-5. 构建项目: `npm run build`
-6. 启动服务: `npm start`
+4. 构建项目: `npm run build`
+5. 启动服务: `npm start`
+6. 访问 `/admin` 路由创建第一个管理员账户（如果数据库中没有用户，会自动跳转到注册页面）
 
 ## 许可证
 
