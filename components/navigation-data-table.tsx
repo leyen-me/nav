@@ -71,27 +71,67 @@ export function NavigationDataTable({
           </div>
         ) : (
           <div className="grid gap-3">
-            {currentNavigations.map((navigation, index) => (
-              <div
-                key={navigation.id}
-                className="group relative rounded-lg border bg-card p-4 transition-all hover:border-primary/50 hover:shadow-sm"
-              >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <Link
-                        href={`/navigation/${navigation.id}`}
-                        className="font-semibold leading-tight group-hover:text-primary transition-colors hover:underline"
+            {currentNavigations.map((navigation, index) => {
+              const rank = startIndex + index + 1
+              // 根据排名使用彩虹色系，越靠前颜色越鲜艳
+              const getRankColor = () => {
+                const rainbowColors = [
+                  { color: "text-red-600", size: "text-5xl", weight: "font-black" },      // 第1名：红色
+                  { color: "text-orange-500", size: "text-4xl", weight: "font-black" },  // 第2名：橙色
+                  { color: "text-yellow-500", size: "text-4xl", weight: "font-bold" },  // 第3名：黄色
+                  { color: "text-green-500", size: "text-3xl", weight: "font-bold" },    // 第4名：绿色
+                  { color: "text-blue-500", size: "text-3xl", weight: "font-bold" },     // 第5名：蓝色
+                  { color: "text-indigo-500", size: "text-2xl", weight: "font-semibold" }, // 第6名：靛色
+                  { color: "text-purple-500", size: "text-2xl", weight: "font-semibold" }, // 第7名：紫色
+                ]
+                
+                // 前7名使用彩虹色
+                if (rank <= 7) {
+                  const style = rainbowColors[rank - 1]
+                  return `${style.color} ${style.size} ${style.weight}`
+                }
+                
+                // 8-10名使用渐变色（较浅的彩虹色）
+                if (rank === 8) return "text-red-400 text-xl font-semibold"
+                if (rank === 9) return "text-orange-400 text-xl font-semibold"
+                if (rank === 10) return "text-yellow-400 text-xl font-semibold"
+                
+                // 10名以后循环使用彩虹色，但更浅
+                const cycleIndex = (rank - 11) % 7
+                const lightColors = [
+                  "text-red-300", "text-orange-300", "text-yellow-300",
+                  "text-green-300", "text-blue-300", "text-indigo-300", "text-purple-300"
+                ]
+                return `${lightColors[cycleIndex]} text-lg font-semibold`
+              }
+
+              return (
+                <div
+                  key={navigation.id}
+                  className="group relative rounded-lg border bg-card p-4 transition-all hover:border-primary/50 hover:shadow-sm"
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-4 flex-1">
+                      <div
+                        className={`flex-shrink-0 w-20 flex items-center justify-center ${getRankColor()}`}
                       >
-                        {navigation.title}
-                      </Link>
-                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground shrink-0">
-                        <IconTrendingUp className="h-4 w-4" />
-                        <span className="font-medium tabular-nums">
-                          {navigation.visits.toLocaleString()}
-                        </span>
+                        {rank}
                       </div>
-                    </div>
+                      <div className="flex-1 space-y-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <Link
+                            href={`/navigation/${navigation.id}`}
+                            className="font-semibold leading-tight group-hover:text-primary transition-colors hover:underline"
+                          >
+                            {navigation.title}
+                          </Link>
+                          <div className="flex items-center gap-1.5 text-sm text-muted-foreground shrink-0">
+                            <IconTrendingUp className="h-4 w-4" />
+                            <span className="font-medium tabular-nums">
+                              {navigation.visits.toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
                     <a
                       href={navigation.url}
                       target="_blank"
@@ -123,20 +163,22 @@ export function NavigationDataTable({
                         )}
                       </div>
                     )}
-                    <div className="text-xs text-muted-foreground">
-                      {new Date(navigation.createdAt).toLocaleDateString(
-                        "zh-CN",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
-                      )}
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(navigation.createdAt).toLocaleDateString(
+                            "zh-CN",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
         {navigations.length > pageSize && (
