@@ -488,11 +488,13 @@ export function NavigationManagement() {
 
       {/* 分页 */}
       {pagination.totalPages > 0 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex items-center justify-between gap-4 pt-2">
+          <div className="text-sm text-muted-foreground whitespace-nowrap">
             共 {pagination.total.toLocaleString()} 条，第 {pagination.page} / {pagination.totalPages} 页
           </div>
-          {renderPagination()}
+          <div className="shrink-0">
+            {renderPagination()}
+          </div>
         </div>
       )}
 
