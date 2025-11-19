@@ -321,7 +321,7 @@ export function NavigationManagement() {
             <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="全部标签" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="max-h-[300px]">
               <SelectItem value="all">全部标签</SelectItem>
               {tags.map((tag) => (
                 <SelectItem key={tag.id} value={tag.name}>
@@ -366,7 +366,7 @@ export function NavigationManagement() {
             onClick={handleUpdateFavicons}
           >
             <RefreshCw className="mr-2 h-4 w-4" />
-            更新网站图标
+            更新图标
           </Button>
         </div>
       </div>
