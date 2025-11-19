@@ -102,6 +102,12 @@ async function getDashboardData() {
     },
   })
 
+  // 将 Date 转换为 string 以匹配组件类型
+  const popularNavigationsWithStringDates = popularNavigations.map((nav) => ({
+    ...nav,
+    createdAt: nav.createdAt.toISOString(),
+  }))
+
   return {
     stats: {
       totalNavigations,
@@ -112,7 +118,7 @@ async function getDashboardData() {
     trends: {
       visits: visitTrend,
     },
-    popularNavigations,
+    popularNavigations: popularNavigationsWithStringDates,
   }
 }
 

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation"
+import { Suspense } from "react"
 import { prisma } from "@/lib/prisma"
 import { LoginForm } from "./login-form"
 
@@ -11,5 +12,9 @@ export default async function LoginPage() {
     redirect("/admin/register")
   }
 
-  return <LoginForm />
+  return (
+    <Suspense fallback={<div>加载中...</div>}>
+      <LoginForm />
+    </Suspense>
+  )
 }
